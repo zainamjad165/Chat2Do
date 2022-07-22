@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block contant %}
+    <div class="container ">
+        <h1>Signup Here</h1>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" required class="form-control" name="email" aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" required class="form-control" name="password">
+            </div>
+            <button type="signup"  class="btn btn-primary">Signup</button>
+        </form>
+    </div>
+{% endblock %}
