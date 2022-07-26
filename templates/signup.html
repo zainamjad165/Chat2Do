@@ -1,17 +1,22 @@
 {% extends "base.html" %}
 {% block contant %}
-    <div class="container ">
+    <div class="container text-center">
         <h1>Signup Here</h1>
-        <form method="POST">
+            {% for error in errors %}
+			    <div class="alert alert-danger" role="alert">
+					{{ error }}
+				</div>
+			{% endfor %}
+        <form  method="POST">
             <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
-                <input type="email" required class="form-control" name="email" aria-describedby="emailHelp">
+                <input type="email" required class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter Your Email Here">
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" required class="form-control" name="password">
+                <input type="password" required class="form-control" name="password" placeholder="Enter Your Password Here">
             </div>
-            <button type="signup"  class="btn btn-primary">Signup</button>
+            <button type="submit" class="btn btn-primary">Registor</button>
         </form>
     </div>
 {% endblock %}

@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, Request, responses, status
+from fastapi import Depends, FastAPI, Request, Response, status, responses
 from typing import List
 from app.db import User, create_db_and_tables, get_user_db
 from app.schemas import UserCreate, UserRead
@@ -19,16 +19,49 @@ app.include_router(fastapi_users.get_register_router(UserRead, UserCreate),prefi
 templates = Jinja2Templates(directory="templates")
 app.mount("/static/", StaticFiles(directory="static"), name="static")
 
+
+@app.on_event("startup")
+async def on_startup():
+    await create_db_and_tables()
+
+
+
 @app.get("/", include_in_schema=False)
-async def get(request:Request):
-    return templates.TemplateResponse("home.html",{"request":request})
+async def get(request:Request, msg:str=None):
+    return templates.TemplateResponse("home.html",{"request":request, "msg":msg})
+
+@app.post("/", include_in_schema=False)
+async def login(response: Response, request: Request, db: Session = Depends(get_user_db)):
+    form = await request.form()
+    email = form.get("email")
+    password = form.get("password")
+    errors = []
+    if not email:
+        errors.append("Please Enter valid Email")
+    if not password:
+        errors.append("Password enter password")
+    if len(errors) > 0:
+        return templates.TemplateResponse("home.html", {"request": request, "errors": errors})
+    try:
+        user = db.query(User).filter(User.email == email).first()
+        if user is None:
+            errors.append("Email does not exists")
+            return templates.TemplateResponse("home.html", {"request": request, "errors": errors})
+        else:
+            errors.append("Invalid Password")
+            return templates.TemplateResponse("home.html", {"request": request, "errors": errors})
+    except:
+        errors.append("Something Wrong while authentication or storing tokens!")
+        return templates.TemplateResponse("home.html", {"request": request, "errors": errors})
+
+
 
 @app.get("/signup.html", include_in_schema=False)
 async def get(request:Request):
     return templates.TemplateResponse("signup.html",{"request":request})
 
-@app.post("/singup.html")
-async def registration(request: Request, db: Session = Depends(get_user_db)):
+@app.post("/signup.html", include_in_schema=False)
+async def registration(request: Request, user: User = Depends(get_user_db)):
     form = await request.form()
     email = form.get("email")
     password = form.get("password")
@@ -37,75 +70,103 @@ async def registration(request: Request, db: Session = Depends(get_user_db)):
         errors.append("Password should be greater than 6 chars")
     if not email:
         errors.append("Email can't be blank")
-    user = User(email=email, password=password)
+    user.email=email
+    user.password=password
     if len(errors) > 0:
-        return templates.TemplateResponse(
-            "user_register.html", {"request": request, "errors": errors}
-        )
+        return templates.TemplateResponse("/signup.html", {"request": request, "errors": errors})
     try:
-        db.add(user)
-        db.commit()
-        db.refresh(user)
-        return responses.RedirectResponse(
-            "/?msg=successfully registered", status_code=status.HTTP_302_FOUND
-        )
+        user.email=email
+        user.password=password
+        return responses.RedirectResponse("/?msg=successfully registered", status_code=status.HTTP_302_FOUND)
     except IntegrityError:
         errors.append("Duplicate email")
-        return templates.TemplateResponse(
-            "user_register.html", {"request": request, "errors": errors}
-        )
+        return templates.TemplateResponse("/signup.html", {"request": request, "errors": errors})
 
-@app.get("/login.html", include_in_schema=False)
+
+
+@app.get("/after-login.html", include_in_schema=False)
 async def get(request:Request):
-    return templates.TemplateResponse("login.html",{"request":request})
+    return templates.TemplateResponse("after-login.html",{"request":request})
+
+
 
 @app.get("/todos.html", include_in_schema=False)
 async def get(request:Request):
     return templates.TemplateResponse("todos.html",{"request":request})
 
+
+
+@app.get("/create-a-todo", include_in_schema=False)
+async def get(request:Request):
+    return templates.TemplateResponse("create-a-todo.html",{"request":request})
+
+@app.post("/create-a-todo.html",include_in_schema=False)
+async def create_a_todo(request: Request, db: Session = Depends(get_user_db)):
+    form = await request.form()
+    title = form.get("title")
+    description = form.get("description")
+    todos = todos(title=title,description=description)
+    db.add(todos)
+    db.commit()
+    db.refresh(todos)
+    errors = []
+    if not title or len(title) < 4:
+        errors.append("Title should be > 4 chars")
+    if not description or len(description) < 10:
+        errors.append("Description should be > 10 chars")
+    if len(errors) > 0:
+        return templates.TemplateResponse("create-a-todo.html", {"request": request, "errors": errors})
+
+
+
 @app.get("/chat.html", include_in_schema=False)
 async def get(request:Request):
     return templates.TemplateResponse("chat.html",{"request":request})
 
-@app.on_event("startup")
-async def on_startup():
-    await create_db_and_tables()
 
-@app.post("/create todos/", response_model=SeeTodo)
+
+
+#FASTAPI DOCS
+########################################################################################################################
+
+@app.post("/create a todo", response_model=SeeTodo)
 async def create_todos(todo: AddTodo, user: User = Depends(current_active_user)):
     query = todos.insert().values(tittle = todo.tittle, description = todo.description, username = user.email)
     last_record_id = await database.execute(query)
     query = todos.select()
-    row = await database.fetch_one(query)
-    return {**row}
+    created_todo = await database.fetch_one(query)
+    return {**created_todo}
 
-@app.get("/see todos/", response_model=List[SeeTodo])
+@app.get("/see todos", response_model=List[SeeTodo])
 async def read_todos(user: User = Depends(current_active_user)):
     query = todos.select().where(todos.c.username == user.email)
-    return await database.fetch_all(query)
+    todos_in_db=await database.fetch_all(query)
+    return todos_in_db
 
-@app.post("/create message for group/", response_model=SeeMessage)
+@app.post("/create message for group", response_model=SeeMessage)
 async def create_message(message: AddMessage, user: User = Depends(current_active_user)):
     query = messages.insert().values(message = message.message, by = user.email)
     last_record_id = await database.execute(query)
     query = messages.select()
-    contant = await database.fetch_one(query)
-    return {**contant}
+    created_text_for_group = await database.fetch_one(query)
+    return {**created_text_for_group}
 
-@app.get("/see group messages/", response_model=List[SeeMessage])
+@app.get("/see group messages", response_model=List[SeeMessage])
 async def read_message(user: User = Depends(current_active_user)): 
     query = messages.select()
-    return await database.fetch_all(query)
+    messages_in_group=await database.fetch_all(query)
+    return messages_in_group
 
-@app.post("/private text/", response_model=SeeText)
+@app.post("/create a private text", response_model=SeeText)
 async def create_text(text: AddText,user: User = Depends(current_active_user)):
     query = texts.insert().values(message = text.message , to = text.to , by = user.email)
     last_record_id = await database.execute(query)
     query = messages.select()
-    make = await database.fetch_one(query)
-    return {**make}
+    created_text = await database.fetch_one(query)
+    return {**created_text}
 
-@app.get("/see private text/", response_model=List[SeeText])
+@app.get("/see a private text", response_model=List[SeeText])
 async def read_text(user: User = Depends(current_active_user)): 
     query = texts.select().where(texts.c.to == user.email)
-    return await database.fetch_all(query)
+    text_in_private=await database.fetch_all(query)
+    return text_in_private
