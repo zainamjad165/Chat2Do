@@ -31,7 +31,7 @@ async def get(request:Request, msg:str=None):
     return templates.TemplateResponse("home.html",{"request":request, "msg":msg})
 
 @app.post("/", include_in_schema=False)
-async def login(response: Response, request: Request, db: Session = Depends(get_user_db)):
+async def login(response: Response, request: Request, user: User = Depends(get_user_db)):
     form = await request.form()
     email = form.get("email")
     password = form.get("password")
@@ -39,17 +39,20 @@ async def login(response: Response, request: Request, db: Session = Depends(get_
     if not email:
         errors.append("Please Enter valid Email")
     if not password:
-        errors.append("Password enter password")
+        errors.append("Password enter invalid")
     if len(errors) > 0:
         return templates.TemplateResponse("home.html", {"request": request, "errors": errors})
     try:
-        user = db.query(User).filter(User.email == email).first()
-        if user is None:
+        user.email=email
+        user.password=password
+        if user.email is None:
             errors.append("Email does not exists")
             return templates.TemplateResponse("home.html", {"request": request, "errors": errors})
-        else:
+        if user.password is None:
             errors.append("Invalid Password")
             return templates.TemplateResponse("home.html", {"request": request, "errors": errors})
+        else:
+            return templates.TemplateResponse("afterlogin.html", {"request": request, "errors": errors})
     except:
         errors.append("Something Wrong while authentication or storing tokens!")
         return templates.TemplateResponse("home.html", {"request": request, "errors": errors})
@@ -70,23 +73,22 @@ async def registration(request: Request, user: User = Depends(get_user_db)):
         errors.append("Password should be greater than 6 chars")
     if not email:
         errors.append("Email can't be blank")
-    user.email=email
-    user.password=password
+    
     if len(errors) > 0:
-        return templates.TemplateResponse("/signup.html", {"request": request, "errors": errors})
+        return templates.TemplateResponse("signup.html", {"request": request, "errors": errors})
     try:
         user.email=email
         user.password=password
         return responses.RedirectResponse("/?msg=successfully registered", status_code=status.HTTP_302_FOUND)
     except IntegrityError:
         errors.append("Duplicate email")
-        return templates.TemplateResponse("/signup.html", {"request": request, "errors": errors})
+        return templates.TemplateResponse("signup.html", {"request": request, "errors": errors})
 
 
 
-@app.get("/after-login.html", include_in_schema=False)
+@app.get("/afterlogin.html", include_in_schema=False)
 async def get(request:Request):
-    return templates.TemplateResponse("after-login.html",{"request":request})
+    return templates.TemplateResponse("afterlogin.html",{"request":request})
 
 
 
@@ -96,26 +98,24 @@ async def get(request:Request):
 
 
 
-@app.get("/create-a-todo", include_in_schema=False)
+@app.get("/creatatodo.html", include_in_schema=False)
 async def get(request:Request):
-    return templates.TemplateResponse("create-a-todo.html",{"request":request})
+    return templates.TemplateResponse("creatatodo.html",{"request":request})
 
-@app.post("/create-a-todo.html",include_in_schema=False)
-async def create_a_todo(request: Request, db: Session = Depends(get_user_db)):
+@app.post("/creatatodo.html",include_in_schema=False)
+async def create_a_todo(todo: AddTodo ,request: Request, user: User = Depends(current_active_user)):
     form = await request.form()
     title = form.get("title")
     description = form.get("description")
-    todos = todos(title=title,description=description)
-    db.add(todos)
-    db.commit()
-    db.refresh(todos)
+    query = todos.insert().values(title = todo.tittle, description = todo.description, username = user.email)
+    last_record_id = await database.execute(query)
     errors = []
     if not title or len(title) < 4:
         errors.append("Title should be > 4 chars")
     if not description or len(description) < 10:
         errors.append("Description should be > 10 chars")
     if len(errors) > 0:
-        return templates.TemplateResponse("create-a-todo.html", {"request": request, "errors": errors})
+        return templates.TemplateResponse("creatatodo.html", {"request": request, "errors": errors})
 
 
 
@@ -123,6 +123,10 @@ async def create_a_todo(request: Request, db: Session = Depends(get_user_db)):
 async def get(request:Request):
     return templates.TemplateResponse("chat.html",{"request":request})
 
+
+@app.get("/private.html", include_in_schema=False)
+async def get(request:Request):
+    return templates.TemplateResponse("private.html",{"request":request})
 
 
 
@@ -162,8 +166,8 @@ async def create_text(text: AddText,user: User = Depends(current_active_user)):
     query = texts.insert().values(message = text.message , to = text.to , by = user.email)
     last_record_id = await database.execute(query)
     query = messages.select()
-    created_text = await database.fetch_one(query)
-    return {**created_text}
+    addtext = await database.fetch_one(query)
+    return {**addtext}
 
 @app.get("/see a private text", response_model=List[SeeText])
 async def read_text(user: User = Depends(current_active_user)): 
