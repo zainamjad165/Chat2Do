@@ -117,6 +117,11 @@ async def create_a_todo(todo: AddTodo ,request: Request, user: User = Depends(cu
     if len(errors) > 0:
         return templates.TemplateResponse("creatatodo.html", {"request": request, "errors": errors})
 
+@app.get("/seetodos.html", include_in_schema=False)
+async def get(request:Request,user: User = Depends(current_active_user)):
+    query = todos.select().where(todos.c.username == user.email)
+    todos_in_db=await database.fetch_all(query)
+    return templates.TemplateResponse("seetodos.html",{"request":request, "todos_in_db":todos_in_db})
 
 
 @app.get("/chat.html", include_in_schema=False)
@@ -129,6 +134,27 @@ async def get(request:Request):
     return templates.TemplateResponse("private.html",{"request":request})
 
 
+@app.post("/private.html", include_in_schema=False)
+async def create_text(text: AddText,request: Request,user: User = Depends(current_active_user)):
+    form = await request.form()
+    message = form.get("message")
+    to = form.get("to")
+    query = texts.insert().values(message = text.message , to = text.to , by = user.email)
+    last_record_id = await database.execute(query)
+
+
+@app.get("/groupchat.html", include_in_schema=False)
+async def get(request:Request):
+    return templates.TemplateResponse("groupchat.html",{"request":request})
+
+
+@app.post("/groupchat.html", include_in_schema=False)
+async def create_text(text: AddText,request: Request,user: User = Depends(current_active_user)):
+    form = await request.form()
+    message = form.get("message")
+    by = form.get("by")
+    query = messages.insert().values(message = message.message, by = user.email)
+    last_record_id = await database.execute(query)
 
 #FASTAPI DOCS
 ########################################################################################################################
