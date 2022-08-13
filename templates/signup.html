@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% block contant %}
     <div class="container text-center">
+        {% include 'navbar.html' %}
+        {% if msg %}
+            <div class="alert alert-success" role="alert">
+                {{msg}}
+            </div>
+        {% endif %} 
         <h1>Signup Here</h1>
             {% for error in errors %}
 			    <div class="alert alert-danger" role="alert">

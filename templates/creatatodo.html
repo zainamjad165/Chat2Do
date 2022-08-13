@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 {% block contant %}
     <div class="container text-center">
+        {% include 'navbar2.html' %}
         <h1>Create Todo Here</h1>
         <form  method="POST">
             <div class="mb-3">
-                <label for="title" class="form-label">Todo Title</label>
-		    	<input type="text" class="form-control" required name="title" placeholder="enter title">
+                <label for="tittle" class="form-label">Todo Tittle</label>
+		    	<input type="text" class="form-control" required name="tittle" placeholder="Enter tittle">
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Todo Description</label>

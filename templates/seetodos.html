@@ -1,26 +1,20 @@
 {% extends "base.html" %}
 {% block contant %}
     <div class="container text-center">
+        {% include 'navbar2.html' %}
         <h1>See Todos Here</h1>
-        {{ todos_in_db }}
         <div class="row">
             {% for item in todos_in_db %}
-                <div class="col">
-                    {% include 'card.html' %}
-                </div>
+                    <div class="col">
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{item.tittle}}</h5>
+                                <p class="card-text">{{item.description}}</p>
+                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
+                        </div>
+                    </div>    
             {% endfor %}
         </div>
-        
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Read more</a>
-            </div>
-        </div>
-		<div class="col-md-4 mr-auto">
-			{% include 'card.html' %}
-		</div>
     </div>
-    
 {% endblock %}

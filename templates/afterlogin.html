@@ -2,12 +2,18 @@
 
 {% block contant %}
 <div class="container text-center">
+    {% include 'navbar2.html' %}
+    {% if msg %}
+        <div class="alert alert-success" role="alert">
+            {{msg}}
+        </div>
+    {% endif %}
     <div class="icon">
         <h2 class="logo">MY APP</h2>
     </div>
     <div class="menu">
         <ul>
-            <li><a href="todos.html">TODOS</a></li>
+            <li><a href="todos.html">TODO</a></li>
             <li><a href="chat.html">CHAT</a></li>
         </ul>
     </div> 

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block contant %}
     <div class="container text-center">
+        {% include 'navbar2.html' %}
         <h1>Private Chat Here</h1>
         <form  method="POST">
             <div class="mb-3">
@@ -8,7 +9,7 @@
 		    	<input type="email" class="form-control" required name="to" placeholder="enter the reciver email">
             </div>
             <div class="mb-3">
-                <label for="message" class="form-label">Contant</label>
+                <label for="message" class="form-label">Text</label>
     			<textarea class="form-control" required name="message" placeholder="Enter the text"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Send</button>
