@@ -2,7 +2,17 @@
 {% block contant %}
     <div class="container text-center">
         {% include 'navbar2.html' %}
+        {% if msg %}
+            <div class="alert alert-success" role="alert">
+                {{msg}}
+            </div>
+        {% endif %}
         <h1>Create Todo Here</h1>
+        {% for error in errors %}
+			<div class="alert alert-danger" role="alert">
+				{{ error }}
+			</div>
+        {% endfor %}
         <form  method="POST">
             <div class="mb-3">
                 <label for="tittle" class="form-label">Todo Tittle</label>

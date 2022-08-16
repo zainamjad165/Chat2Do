@@ -123,22 +123,24 @@ async def get(request:Request):
     return templates.TemplateResponse("creatatodo.html",{"request":request})
 
 
-@app.post("/creatatodo.html",include_in_schema=False,response_class=ORJSONResponse)
-async def create_a_todo(todo: AddTodo ,request: Request, user: User = Depends(current_active_user)):
+
+@app.post("/creatatodo.html",include_in_schema=False)
+async def create_a_todo(request: Request,user: User = Depends(current_active_user)):
     form = await request.form()
-    title = form.get("title")
+    tittle = form.get("tittle")
     description = form.get("description")
     errors = []
-    if not title or len(title) < 4:
-        errors.append("Title should be > 4 chars")
+    if not tittle or len(tittle) < 4:
+        errors.append("Tittle should be > 4 chars")
     if not description or len(description) < 10:
         errors.append("Description should be > 10 chars")
     if len(errors) > 0:
         return templates.TemplateResponse("creatatodo.html", {"request": request, "errors": errors})
     else:
-        query = todos.insert().values(title = todo.tittle, description = todo.description, username = user.email)
-        last_record_id = await database.execute(query)
-        return templates.TemplateResponse("creatatodo.html", {"request": request})
+        query = todos.insert().values(tittle = tittle,description = description, username = user.email)
+        await database.execute(query)
+        msg = "TODO CREATED"
+        return templates.TemplateResponse("creatatodo.html", {"request": request,"msg": msg})
 
 
 @app.get("/seetodos.html", include_in_schema=False)
@@ -146,6 +148,35 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
     query = todos.select().where(todos.c.username == user.email)
     todos_in_db=await database.fetch_all(query)
     return templates.TemplateResponse("seetodos.html",{"request":request,"todos_in_db":todos_in_db,"msg":msg})
+
+
+@app.post("/seetodos.html", include_in_schema=False)
+async def get(request:Request,user: User = Depends(current_active_user)):
+    form = await request.form()
+    id = form.get("id")
+    error = []
+    if not id:
+        error.append("enter the id of completed todo")
+    else:
+        query = todos.delete().where(todos.c.id == id and todos.c.username == user.email)
+        await database.fetch_all(query)
+        msg = "TODO COMPLETED"
+        todos_in_db=await database.fetch_all(query)
+        return templates.TemplateResponse("seetodos.html",{"request":request,"todos_in_db":todos_in_db,"msg":msg,"error":error})
+    # completed=await database.fetch_all(query)
+    
+    # query = todos.select().where(todos.c.username == user.email)
+    # todos_in_db=await database.fetch_all(query)
+    # return templates.TemplateResponse("seetodos.html",{"request":request,"todos_in_db":todos_in_db,"msg":msg})
+
+@app.post("/deltodo", include_in_schema=False)
+async def get(request:Request,user: User = Depends(current_active_user)):
+    form = await request.form()
+    id = form.get("id")
+    query = todos.delete().where(todos.c.id == id and todos.c.username == user.email)
+    await database.fetch_all(query)
+    msg = "TODO COMPLETED"
+    return templates.TemplateResponse("seetodos.html",{"request":request,"msg":msg})
 
 
 @app.get("/chat.html", include_in_schema=False)
@@ -159,15 +190,14 @@ async def get(request:Request):
 
 
 @app.post("/private.html", include_in_schema=False)
-async def create_text(text: AddText,request: Request,user: User = Depends(current_active_user)):
+async def create_text(request: Request,user: User = Depends(current_active_user)):
     form = await request.form()
     message = form.get("message")
     to = form.get("to")
-    query = texts.insert().values(message = text.message , to = text.to , by = user.email)
-    last_record_id = await database.execute(query)
-    query = texts.select().where(texts.c.to == user.email)
-    text_in_private=await database.fetch_all(query)
-    return templates.TemplateResponse("private.html",{"request":request,"text_in_private":text_in_private})
+    query = texts.insert().values(message = message , to = to , by = user.email)
+    await database.execute(query)
+    msg = "MESSAGE SEND"
+    return templates.TemplateResponse("private.html",{"request":request,"msg": msg})
 
 
 @app.get("/seeprivatechat.html", include_in_schema=False)
@@ -183,14 +213,13 @@ async def get(request:Request):
 
 
 @app.post("/groupchat.html", include_in_schema=False)
-async def create_text(text: AddText,request: Request,msg: str = None,user: User = Depends(current_active_user)):
+async def create_text(request: Request,user: User = Depends(current_active_user)):
     form = await request.form()
     message = form.get("message")
-    query = messages.insert().values(message = message.message, by = user.email)
-    last_record_id = await database.execute(query)
-    query = messages.select()
-    messages_in_group=await database.fetch_all(query)
-    return templates.TemplateResponse("groupchat.html",{"request":request,"messages_in_group":messages_in_group,"msg":msg})
+    query = messages.insert().values(message = message, by = user.email)
+    await database.execute(query)
+    msg = "MESSAGE SEND TO GROUP"
+    return templates.TemplateResponse("groupchat.html",{"request":request,"msg": msg})
 
 
 @app.get("/seegroupchat.html", include_in_schema=False)
@@ -206,7 +235,6 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
 async def create_todos(todo: AddTodo, user: User = Depends(current_active_user)):
     query = todos.insert().values(tittle = todo.tittle, description = todo.description, username = user.email)
     last_record_id = await database.execute(query)
-    print(query)
     query = todos.select()
     created_todo = await database.fetch_one(query)
     return {**created_todo}

@@ -3,18 +3,32 @@
     <div class="container text-center">
         {% include 'navbar2.html' %}
         <h1>See Todos Here</h1>
-        <div class="row">
-            {% for item in todos_in_db %}
-                    <div class="col">
-                        <div class="card" style="width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">{{item.tittle}}</h5>
-                                <p class="card-text">{{item.description}}</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
-                            </div>
-                        </div>
-                    </div>    
-            {% endfor %}
-        </div>
+        <form  method="POST">
+            <div class="mb-3">
+                <label for="id" class="form-label">Todo id</label>
+		    	<input type="text" class="form-control" required name="id" placeholder="Enter todo id which is completed">
+            </div>
+            <button type="submit" class="btn btn-primary">Completed</button>
+        </form>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Todo ID</th>
+                <th scope="col">Tittle</th>
+                <th scope="col">Description</th>
+                <th scope="col">status</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for item in todos_in_db %}
+                <tr>
+                    <th scope="row">{{ item.id }}</th>
+                    <td>{{item.tittle}}</td>
+                    <td>{{item.description}}</td>
+                    <td><button type="submit" class="btn btn-success">In Progress</button></td>
+                </tr>   
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}

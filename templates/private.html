@@ -2,6 +2,11 @@
 {% block contant %}
     <div class="container text-center">
         {% include 'navbar2.html' %}
+        {% if msg %}
+            <div class="alert alert-success" role="alert">
+                {{msg}}
+            </div>
+        {% endif %}
         <h1>Private Chat Here</h1>
         <form  method="POST">
             <div class="mb-3">
