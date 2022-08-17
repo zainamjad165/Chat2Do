@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Webpage Design</title>
+    <link rel="stylesheet" href="/static/chat.css">
+</head>
+<body>
+	<div id="container">
+		<main>
+			<header>
+				<div>
+					<h2>CHAT ROOM</h2>
+				</div>
+			</header>
+			<ul id="chat">
+				<li class="you">
+          {% for item in messages_in_group %}
+					<div class="entete">
+						<span class="status green"></span>
+						<h2>{{item.by}}</h2>
+					</div>
+					<div class="triangle"></div>
+					<div class="message">
+						{{item.message}}
+					</div>
+          {% endfor %}
+				</li>
+				<!-- <li class="me">
+					<div class="entete">
+						<h3>10:12AM, Today</h3>
+						<h2>Vincent</h2>
+						<span class="status blue"></span>
+					</div>
+					<div class="triangle"></div>
+					<div class="message">
+						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+					</div>
+				</li> -->
+			</ul>
+			
+			<footer>
+				<textarea placeholder="Type your message"></textarea>
+				<a href="#">Send</a>
+			</footer>
+		</main>
+	</div>
+</body>
+</html>
+<!-- 
+{% extends "base.html" %}
+{% block contant %}
+    <div class="container text-center">
+      {% include 'navbar2.html' %}
+        <h1>See Your Group Chat Here</h1>
+        <div class="row">
+            {% for item in messages_in_group %}
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                  <div class="card-body">
+                    <h5 class="card-title">{{item.message}}</h5>
+                    <p class="card-text">{{item.by}}</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                  </div>
+                </div>
+              </div> 
+            {% endfor %}
+        </div>  
+    </div>
+{% endblock %} -->
