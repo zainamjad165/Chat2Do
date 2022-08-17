@@ -8,24 +8,26 @@
 	<div id="container">
 		<main>
 			<header>
+				<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt="">
 				<div>
-					<h2>CHAT ROOM</h2>
+					<h2>Chat with Vincent Porter</h2>
+					<h3>already 1902 messages</h3>
 				</div>
 			</header>
+			{% for item in text_in_private %}
 			<ul id="chat">
 				<li class="you">
-          {% for item in messages_in_group %}
 					<div class="entete">
 						<span class="status green"></span>
 						<h2>{{item.by}}</h2>
+						<h3>10:12AM, Today</h3>
 					</div>
 					<div class="triangle"></div>
 					<div class="message">
 						{{item.message}}
 					</div>
-          {% endfor %}
 				</li>
-				<!-- <li class="me">
+				<li class="me">
 					<div class="entete">
 						<h3>10:12AM, Today</h3>
 						<h2>Vincent</h2>
@@ -35,9 +37,9 @@
 					<div class="message">
 						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
 					</div>
-				</li> -->
+				</li>
 			</ul>
-			
+			{% endfor %}
 			<footer>
 				<textarea placeholder="Type your message"></textarea>
 				<a href="#">Send</a>
@@ -46,24 +48,22 @@
 	</div>
 </body>
 </html>
-<!-- 
-{% extends "base.html" %}
-{% block contant %}
-    <div class="container text-center">
-      {% include 'navbar2.html' %}
-        <h1>See Your Group Chat Here</h1>
-        <div class="row">
-            {% for item in messages_in_group %}
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                  <div class="card-body">
-                    <h5 class="card-title">{{item.message}}</h5>
-                    <p class="card-text">{{item.by}}</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                  </div>
-                </div>
-              </div> 
-            {% endfor %}
-        </div>  
-    </div>
-{% endblock %} -->
+
+
+<!-- <aside>
+	<header>
+		<input type="text" placeholder="search">
+	</header>
+	<ul>
+		<li>
+			<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt="">
+			<div>
+				<h2>Prénom Nom</h2>
+				<h3>
+					<span class="status orange"></span>
+					offline
+				</h3>
+			</div>
+		</li>
+	</ul>
+</aside> -->

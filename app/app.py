@@ -188,6 +188,9 @@ async def get(request:Request):
 async def get(request:Request):
     return templates.TemplateResponse("private.html",{"request":request})
 
+@app.get("/chatroom.html", include_in_schema=False)
+async def get(request:Request):
+    return templates.TemplateResponse("chatroom.html",{"request":request})
 
 @app.post("/private.html", include_in_schema=False)
 async def create_text(request: Request,user: User = Depends(current_active_user)):
