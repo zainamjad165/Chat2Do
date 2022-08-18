@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>Webpage Design</title>
-    <link rel="stylesheet" href="/static/chat.css">
+    <!-- <link rel="stylesheet" href="/static/chat.css"> -->
 </head>
 <body>
 	<div id="container">
@@ -46,24 +46,3 @@
 	</div>
 </body>
 </html>
-<!-- 
-{% extends "base.html" %}
-{% block contant %}
-    <div class="container text-center">
-      {% include 'navbar2.html' %}
-        <h1>See Your Group Chat Here</h1>
-        <div class="row">
-            {% for item in messages_in_group %}
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                  <div class="card-body">
-                    <h5 class="card-title">{{item.message}}</h5>
-                    <p class="card-text">{{item.by}}</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                  </div>
-                </div>
-              </div> 
-            {% endfor %}
-        </div>  
-    </div>
-{% endblock %} -->

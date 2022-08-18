@@ -1,5 +1,4 @@
-from operator import truediv
-from fastapi import Depends, FastAPI, Request, Response, status, responses
+from fastapi import Depends, FastAPI, Request, Response
 from typing import List
 from app.db import User, create_db_and_tables, get_user_db,get_async_session
 from app.schemas import UserCreate, UserRead
@@ -8,9 +7,9 @@ from main import todos,texts,messages,database,AddMessage,SeeMessage,AddText,Add
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import RedirectResponse, HTMLResponse,ORJSONResponse
+from fastapi.responses import HTMLResponse
 import contextlib
-from app.users import get_user_manager,SQLAlchemyUserDatabase
+from app.users import get_user_manager
 
 app = FastAPI()
 
@@ -31,7 +30,7 @@ app.mount("/static/", StaticFiles(directory="static"), name="static")
 async def on_startup():
     await create_db_and_tables()
 
-@app.get("/signup.html", include_in_schema=False)
+@app.get("/signup", include_in_schema=False)
 async def get(request:Request):
     return templates.TemplateResponse("signup.html",{"request":request})
 
@@ -47,7 +46,7 @@ async def create_user(email: str, password: str):
         print(f"User with email {email} already exists")
 
 
-@app.post("/signup.html", include_in_schema=False)
+@app.post("/signup", include_in_schema=False)
 async def registration(request: Request):
     form = await request.form()
     email = form.get("email")
@@ -64,7 +63,7 @@ async def registration(request: Request):
         return templates.TemplateResponse("signup.html", {"request": request, "msg": msg})
         
 
-@app.get("/", include_in_schema=False)
+@app.get("/login", include_in_schema=False)
 async def get(request:Request, msg:str=None):
     try:
         token = request.cookies.get("fastapiusersauth")
@@ -76,7 +75,7 @@ async def get(request:Request, msg:str=None):
         return templates.TemplateResponse("afterlogin.html",{"request":request, "msg":msg})
 
 
-@app.post("/", include_in_schema=False)
+@app.post("/login", include_in_schema=False)
 async def login(response: Response, request: Request, credentials: OAuth2PasswordRequestForm = Depends(),
     user_manager= Depends(get_user_manager)):
     user = await user_manager.authenticate(credentials)
@@ -89,7 +88,7 @@ async def login(response: Response, request: Request, credentials: OAuth2Passwor
                 <meta http-equiv="refresh" content="7; url='/home" />
             </head>
             <body>
-                <p>Successfully logged in redirecting to home Please follow <a href="/afterlogin.html">this link</a>.</p>
+                <p>Successfully logged in redirecting to home Please follow <a href="/home">this link</a>.</p>
             </body>
             </html>
 
@@ -108,12 +107,12 @@ async def get(request:Request, msg:str=None):
 #LOGIN AND SIGNUP ##########################################################################################################################
 
 
-@app.get("/afterlogin.html", include_in_schema=False)
+@app.get("/home", include_in_schema=False)
 async def get(request:Request):
     return templates.TemplateResponse("afterlogin.html",{"request":request})
 
 
-@app.get("/todos.html", include_in_schema=False)
+@app.get("/todo", include_in_schema=False)
 async def get(request:Request):
     return templates.TemplateResponse("todos.html",{"request":request})
 
@@ -160,12 +159,12 @@ async def get(request:Request,user: User = Depends(current_active_user)):
     else:
         query = todos.delete().where(todos.c.id == id and todos.c.username == user.email)
         await database.fetch_all(query)
-        msg = "TODO COMPLETED"
+        msg = "Todo COMPLETED"
         todos_in_db=await database.fetch_all(query)
         return templates.TemplateResponse("seetodos.html",{"request":request,"todos_in_db":todos_in_db,"msg":msg,"error":error})
     # completed=await database.fetch_all(query)
     
-    # query = todos.select().where(todos.c.username == user.email)
+    # query = todos.select().where(todos.c.username == user.email)z
     # todos_in_db=await database.fetch_all(query)
     # return templates.TemplateResponse("seetodos.html",{"request":request,"todos_in_db":todos_in_db,"msg":msg})
 
@@ -179,7 +178,7 @@ async def get(request:Request,user: User = Depends(current_active_user)):
     return templates.TemplateResponse("seetodos.html",{"request":request,"msg":msg})
 
 
-@app.get("/chat.html", include_in_schema=False)
+@app.get("/chat", include_in_schema=False)
 async def get(request:Request):
     return templates.TemplateResponse("chat.html",{"request":request})
 
@@ -188,9 +187,6 @@ async def get(request:Request):
 async def get(request:Request):
     return templates.TemplateResponse("private.html",{"request":request})
 
-@app.get("/chatroom.html", include_in_schema=False)
-async def get(request:Request):
-    return templates.TemplateResponse("chatroom.html",{"request":request})
 
 @app.post("/private.html", include_in_schema=False)
 async def create_text(request: Request,user: User = Depends(current_active_user)):
@@ -205,9 +201,11 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
 
 @app.get("/seeprivatechat.html", include_in_schema=False)
 async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
-    query = texts.select().where(texts.c.to == user.email)
+    query = texts.select().where(texts.c.to == user.email )
     text_in_private=await database.fetch_all(query)
-    return templates.TemplateResponse("seeprivatechat.html",{"request":request,"text_in_private":text_in_private,"msg":msg})
+    query = texts.select().where(texts.c.by == user.email )
+    text_by_in_private=await database.fetch_all(query)
+    return templates.TemplateResponse("seeprivatechat.html",{"request":request,"text_in_private":text_in_private,"text_by_in_private":text_by_in_private,"msg":msg})
 
 
 @app.get("/groupchat.html", include_in_schema=False)
