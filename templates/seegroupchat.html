@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>Webpage Design</title>
-    <!-- <link rel="stylesheet" href="/static/chat.css"> -->
+    <link rel="stylesheet" href="/static/chat.css">
 </head>
 <body>
 	<div id="container">
@@ -14,34 +14,33 @@
 			</header>
 			<ul id="chat">
 				<li class="you">
-          {% for item in messages_in_group %}
-					<div class="entete">
-						<span class="status green"></span>
-						<h2>{{item.by}}</h2>
-					</div>
-					<div class="triangle"></div>
-					<div class="message">
-						{{item.message}}
-					</div>
-          {% endfor %}
+					{% for item in messages_in_group %}
+						<div class="entete">
+							<span class="status green"></span>
+							<h3>{{item.by}}</h3>
+						</div>
+						<div class="triangle"></div>
+						<div class="message">
+							{{item.message}}
+						</div>
+					{% endfor %}
 				</li>
-				<!-- <li class="me">
-					<div class="entete">
-						<h3>10:12AM, Today</h3>
-						<h2>Vincent</h2>
-						<span class="status blue"></span>
-					</div>
-					<div class="triangle"></div>
-					<div class="message">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-					</div>
-				</li> -->
+				<li class="me">
+					{% for item in my_messages %}
+						<div class="triangle"></div>
+						<div class="message">
+							{{item.message}}
+						</div>
+					{% endfor %}
+				</li>
 			</ul>
-			
-			<footer>
-				<textarea placeholder="Type your message"></textarea>
-				<a href="#">Send</a>
-			</footer>
+			<form  method="POST">
+				<div class="mb-3">
+					<label for="message" class="form-label">Text</label>
+					<textarea class="form-control" required name="message" placeholder="Enter the text"></textarea>
+				</div>
+				<button type="submit" class="btn btn-primary">Send</button>
+			</form>
 		</main>
 	</div>
 </body>

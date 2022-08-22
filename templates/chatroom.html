@@ -1,43 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Webpage Design</title>
-    <link rel="stylesheet" href="/static/chat.css">
-</head>
+
 <body>
     <div id="container">
-        <main>
-            <ul id="chat">
-                {% for item in text_in_private %}
-                    <li class="you">
-                        <div class="entete">
-                            <span class="status green"></span>
-                            <h2>{{item.by}}</h2>
-                        </div>
-                        <div class="triangle"></div>
-                        <div class="message">
-                            {{item.message}}
-                        </div>
-                    </li>
-                {% endfor %}
-                {% for item in text_by_in_private %}
-                    <li class="me">
-                        <div class="entete">
-                            <h2>{{item.to}}</h2>
-                            <span class="status blue"></span>
-                        </div>
-                        <div class="triangle"></div>
-                        <div class="message">
-                            {{item.message}}
-                        </div>
-                    </li>
-                {% endfor %}
+        <aside>
+            <header>
+                <input type="text" placeholder="search">
+            </header>
+            <ul>
+                <li>
+                    {% for item in text_in_private %}
+                    <div>
+                        <h2>item.email</h2>
+                        <h3>
+                            <span class="status orange"></span>
+                            offline
+                        </h3>
+                    </div>
+                    {% endfor %}
+                </li>
             </ul>
-            <footer>
-                <textarea placeholder="Type your message"></textarea>
-                <a href="#">Send</a>
-            </footer>
-        </main>
-    </div>
+        </aside>
+    </div> 
 </body>
+
 </html>
