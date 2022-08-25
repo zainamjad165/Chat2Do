@@ -3,20 +3,13 @@
     <div class="container text-center">
         {% include 'navbar2.html' %}
         <h1>See Todos Here</h1>
-        <form  method="POST">
-            <div class="mb-3">
-                <label for="id" class="form-label">Todo id</label>
-		    	<input type="text" class="form-control" required name="id" placeholder="Enter todo id which is completed">
-            </div>
-            <button type="submit" class="btn btn-primary">Completed</button>
-        </form>
         <table class="table">
             <thead>
               <tr>
                 <th scope="col">Todo ID</th>
                 <th scope="col">Tittle</th>
                 <th scope="col">Description</th>
-                <th scope="col">status</th>
+                <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -25,13 +18,14 @@
                     <th scope="row">{{ item.id }}</th>
                     <td>{{item.tittle}}</td>
                     <td>{{item.description}}</td>
-                    <!-- <button class="btn btn-danger" onclick="delete_item({{item.id}})">Delete</button> -->
-                    <td><div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                        <label class="form-check-label" for="flexCheckChecked">
-                          is done
-                        </label>
-                      </div></td>
+                    <td>
+                      <form  method="POST">
+                        <div class="mb-3">
+                          <input required name="id" value="{{ item.id }}" >
+                        </div>
+                        <button type="submit" class="btn btn-primary">Completed</button>
+                      </form>
+                    </td>
                 </tr>   
                 {% endfor %}
             </tbody>

@@ -21,14 +21,13 @@ get_async_session_context = contextlib.asynccontextmanager(get_async_session)
 get_user_db_context = contextlib.asynccontextmanager(get_user_db)
 get_user_manager_context = contextlib.asynccontextmanager(get_user_manager)
 
-#ADDING HTML RESPONCE
 templates = Jinja2Templates(directory="templates")
 app.mount("/static/", StaticFiles(directory="static"), name="static")
-
 
 @app.on_event("startup")
 async def on_startup():
     await create_db_and_tables()
+
 
 @app.get("/signup", include_in_schema=False)
 async def get(request:Request):
@@ -98,13 +97,13 @@ async def login(response: Response, request: Request, credentials: OAuth2Passwor
         errors.append("incorrect password or email")
         return templates.TemplateResponse("home.html",{"request":request, "errors": errors})
 
+
 @app.get("/logout", include_in_schema=False)
 async def get(request:Request, msg:str=None):
     response = templates.TemplateResponse("index.html",{"request":request, "msg":msg})
     response.delete_cookie("fastapiusersauth")
     return response
 
-#LOGIN AND SIGNUP ##########################################################################################################################
 
 @app.get("/home", include_in_schema=False)
 async def get(request:Request,user: User = Depends(current_active_user)):
@@ -118,50 +117,41 @@ async def get(request:Request,user: User = Depends(current_active_user)):
     return templates.TemplateResponse("todos.html",{"request":request,"username":username})
 
 
-@app.get("/creatatodo.html", include_in_schema=False)
-async def get(request:Request):
-    return templates.TemplateResponse("creatatodo.html",{"request":request})
+@app.get("/creatatodo", include_in_schema=False)
+async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
+    query = todos.select().where(todos.c.username == user.email)
+    todos_in_db=await database.fetch_all(query)
+    return templates.TemplateResponse("creatatodo.html",{"request":request,"todos_in_db":todos_in_db,"msg":msg})
 
 
-@app.post("/creatatodo.html",include_in_schema=False)
+@app.post("/creatatodo",include_in_schema=False)
 async def create_a_todo(request: Request,user: User = Depends(current_active_user)):
     form = await request.form()
     tittle = form.get("tittle")
     description = form.get("description")
-    errors = []
-    if not tittle or len(tittle) < 4:
-        errors.append("Tittle should be > 4 chars")
-    if not description or len(description) < 4:
-        errors.append("Description should be > 10 chars")
-    if len(errors) > 0:
-        return templates.TemplateResponse("creatatodo.html", {"request": request, "errors": errors})
-    else:
-        query = todos.insert().values(tittle = tittle,description = description, username = user.email)
-        await database.execute(query)
-        msg = "TODO CREATED"
-        return templates.TemplateResponse("creatatodo.html", {"request": request,"msg": msg})
+    query = todos.insert().values(tittle = tittle,description = description, username = user.email)
+    adding_todo=await database.execute(query)
+    query = todos.select().where(todos.c.username == user.email)
+    todos_in_db=await database.fetch_all(query)
+    return templates.TemplateResponse("creatatodo.html",{"request":request,"todos_in_db":todos_in_db})
 
 
-@app.get("/seetodos.html", include_in_schema=False)
+@app.post("/seetodos", include_in_schema=False)
+async def get(request:Request,user: User = Depends(current_active_user)):
+    form = await request.form()
+    id = form.get("id")
+    query = todos.delete().where(todos.c.id == id and todos.c.username == user.email)
+    del_todo=await database.execute(query)
+    query = todos.select().where(todos.c.username == user.email)
+    todos_in_db=await database.fetch_all(query)
+    return templates.TemplateResponse("seetodos.html",{"request":request,"todos_in_db":todos_in_db})
+
+
+@app.get("/seetodos", include_in_schema=False)
 async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
     query = todos.select().where(todos.c.username == user.email)
     todos_in_db=await database.fetch_all(query)
     return templates.TemplateResponse("seetodos.html",{"request":request,"todos_in_db":todos_in_db,"msg":msg})
-
-
-@app.post("/seetodos.html", include_in_schema=False)
-async def get(request:Request,user: User = Depends(current_active_user)):
-    form = await request.form()
-    id = form.get("id")
-    error = []
-    if not id:
-        error.append("enter the id of completed todo")
-    else:
-        query = todos.delete().where(todos.c.id == id and todos.c.username == user.email)
-        await database.fetch_all(query)
-        msg = "Todo COMPLETED"
-        todos_in_db=await database.fetch_all(query)
-        return templates.TemplateResponse("seetodos.html",{"request":request,"todos_in_db":todos_in_db,"msg":msg,"error":error})
 
 
 @app.get("/chat", include_in_schema=False)
@@ -170,12 +160,12 @@ async def get(request:Request,user: User = Depends(current_active_user)):
     return templates.TemplateResponse("chat.html",{"request":request,"username":username})
 
 
-@app.get("/private.html", include_in_schema=False)
+@app.get("/privatechat", include_in_schema=False)
 async def get(request:Request):
     return templates.TemplateResponse("private.html",{"request":request})
 
 
-@app.post("/private.html", include_in_schema=False)
+@app.post("/privatechat", include_in_schema=False)
 async def create_text(request: Request,user: User = Depends(current_active_user)):
     form = await request.form()
     message = form.get("message")
@@ -186,40 +176,42 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
     return templates.TemplateResponse("private.html",{"request":request,"msg": msg})
 
 
-@app.get("/seeprivatechat.html", include_in_schema=False)
+@app.get("/seeprivatechat", include_in_schema=False)
 async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
     query = texts.select().where(texts.c.to == user.email )
     text_in_private=await database.fetch_all(query)
     query = texts.select().where(texts.c.by == user.email )
     text_by_in_private=await database.fetch_all(query)
-    return templates.TemplateResponse("seeprivatechat.html",{"request":request,"text_in_private":text_in_private,"text_by_in_private":text_by_in_private,"msg":msg})
+    return templates.TemplateResponse("seeprivatechat.html",{"request":request,"text_in_private":text_in_private,
+    "text_by_in_private":text_by_in_private,"msg":msg})
 
 
-@app.get("/groupchat.html", include_in_schema=False)
-async def get(request:Request):
-    return templates.TemplateResponse("groupchat.html",{"request":request})
-
-
-@app.get("/seegroupchat.html", include_in_schema=False)
+@app.get("/groupchat", include_in_schema=False)
 async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
     query = messages.select().where(messages.c.by != user.email )
     messages_in_group=await database.fetch_all(query)
     query = messages.select().where(messages.c.by == user.email )
     my_messages=await database.fetch_all(query)
-    return templates.TemplateResponse("seegroupchat.html",{"request":request,"my_messages":my_messages,"messages_in_group":messages_in_group,"msg":msg})
+    return templates.TemplateResponse("seegroupchat.html",{"request":request,"my_messages":my_messages,
+    "messages_in_group":messages_in_group,"msg":msg})
 
-@app.post("/seegroupchat.html", include_in_schema=False)
+
+@app.post("/groupchat", include_in_schema=False)
 async def create_text(request: Request,user: User = Depends(current_active_user)):
     form = await request.form()
     message = form.get("message")
     query = messages.insert().values(message = message, by = user.email)
     await database.execute(query)
-    msg = "MESSAGE SEND TO GROUP"
-    return templates.TemplateResponse("seegroupchat.html",{"request":request,"msg": msg})
+    query = messages.select().where(messages.c.by != user.email )
+    messages_in_group=await database.fetch_all(query)
+    query = messages.select().where(messages.c.by == user.email )
+    my_messages=await database.fetch_all(query)
+    return templates.TemplateResponse("seegroupchat.html",{"request":request,"my_messages":my_messages,"messages_in_group":messages_in_group})
 
 
 #FASTAPI DOCS
 ########################################################################################################################
+
 
 @app.post("/create a todo", response_model=SeeTodo)
 async def create_todos(todo: AddTodo, user: User = Depends(current_active_user)):
