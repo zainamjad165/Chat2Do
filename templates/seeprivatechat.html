@@ -38,10 +38,15 @@
 					{% endfor %}
 				</li>
 			</ul>
-			<footer>
-				<textarea placeholder="Type your message"></textarea>
-				<a href="#">Send</a>
-			</footer>
+			<form  method="POST">
+				<div class="mb-3">
+					<input type="email" class="form-control" required name="to" placeholder="enter the reciver email">
+				</div>
+				<div class="mb-3">
+					<textarea class="form-control" required name="message" placeholder="Enter the text"></textarea>
+				</div>
+				<button type="submit" class="btn btn-primary">Send</button>
+			</form>
 		</main>
 	</div>
 </body>

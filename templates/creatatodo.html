@@ -12,34 +12,6 @@
 				{{ error }}
 			</div>
         {% endfor %}
-        <h3>Todo List</h3>
-        <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Todo ID</th>
-                <th scope="col">Tittle</th>
-                <th scope="col">Description</th>
-                <th scope="col">status</th>
-              </tr>
-            </thead>
-            <tbody>
-                {% for item in todos_in_db %}
-                <tr>
-                    <th scope="row">{{ item.id }}</th>
-                    <td>{{item.tittle}}</td>
-                    <td>{{item.description}}</td>
-                    <td>
-                        <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                        <label class="form-check-label" for="flexCheckChecked">
-                          is done
-                        </label>
-                      </div>
-                    </td>
-                </tr>   
-                {% endfor %}
-            </tbody>
-        </table>
         <h3>Create Todo</h3>
         <form  method="POST" id="form2">
             <div class="mb-3">

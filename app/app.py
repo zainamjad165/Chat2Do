@@ -3,7 +3,7 @@ from typing import List
 from app.db import User, create_db_and_tables, get_user_db,get_async_session
 from app.schemas import UserCreate, UserRead
 from app.users import auth_backend, current_active_user, fastapi_users, get_jwt_strategy
-from main import todos,texts,messages,database,AddMessage,SeeMessage,AddText,AddTodo,SeeText,SeeTodo
+from main import users,todos,texts,messages,database,AddMessage,SeeMessage,AddText,AddTodo,SeeText,SeeTodo,SeeUser
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -58,6 +58,9 @@ async def registration(request: Request):
     if len(errors) > 0:
         return templates.TemplateResponse("signup.html", {"request": request, "errors": errors})
     else:
+        username=email.split('@')[0]
+        query = users.insert().values(username = username)
+        adding_user=await database.execute(query)
         msg = "successfully registered"
         return templates.TemplateResponse("signup.html", {"request": request, "msg": msg})
         
@@ -145,7 +148,7 @@ async def get(request:Request,user: User = Depends(current_active_user)):
     query = todos.select().where(todos.c.username == user.email)
     todos_in_db=await database.fetch_all(query)
     return templates.TemplateResponse("seetodos.html",{"request":request,"todos_in_db":todos_in_db})
-
+    
 
 @app.get("/seetodos", include_in_schema=False)
 async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
@@ -157,12 +160,22 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
 @app.get("/chat", include_in_schema=False)
 async def get(request:Request,user: User = Depends(current_active_user)):
     username=user.email.split('@')[0]
-    return templates.TemplateResponse("chat.html",{"request":request,"username":username})
+    query = users.select()
+    users_in_db=await database.fetch_all(query)
+    return templates.TemplateResponse("chat.html",{"request":request,"username":username,"users_in_db":users_in_db})
 
 
 @app.get("/privatechat", include_in_schema=False)
-async def get(request:Request):
-    return templates.TemplateResponse("private.html",{"request":request})
+async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
+    username=user.email.split('@')[0]
+    query = users.select().where(users.c.username != username)
+    users_in_db=await database.fetch_all(query)
+    query = texts.select().where(texts.c.to == user.email )
+    text_in_private=await database.fetch_all(query)
+    query = texts.select().where(texts.c.by == user.email )
+    text_by_in_private=await database.fetch_all(query)
+    return templates.TemplateResponse("seeprivatechat.html",{"request":request,"text_in_private":text_in_private,
+    "text_by_in_private":text_by_in_private,"users_in_db":users_in_db,"msg":msg})
 
 
 @app.post("/privatechat", include_in_schema=False)
@@ -172,18 +185,12 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
     to = form.get("to")
     query = texts.insert().values(message = message , to = to , by = user.email)
     await database.execute(query)
-    msg = "MESSAGE SEND"
-    return templates.TemplateResponse("private.html",{"request":request,"msg": msg})
-
-
-@app.get("/seeprivatechat", include_in_schema=False)
-async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
     query = texts.select().where(texts.c.to == user.email )
     text_in_private=await database.fetch_all(query)
     query = texts.select().where(texts.c.by == user.email )
     text_by_in_private=await database.fetch_all(query)
     return templates.TemplateResponse("seeprivatechat.html",{"request":request,"text_in_private":text_in_private,
-    "text_by_in_private":text_by_in_private,"msg":msg})
+    "text_by_in_private":text_by_in_private})
 
 
 @app.get("/groupchat", include_in_schema=False)
@@ -226,6 +233,12 @@ async def read_todos(user: User = Depends(current_active_user)):
     query = todos.select().where(todos.c.username == user.email)
     todos_in_db=await database.fetch_all(query)
     return todos_in_db
+
+@app.get("/see users", response_model=List[SeeUser])
+async def read_users(user: User = Depends(current_active_user)):
+    query = users.select()
+    users_in_db=await database.fetch_all(query)
+    return users_in_db
 
 @app.post("/create message for group", response_model=SeeMessage)
 async def create_message(message: AddMessage, user: User = Depends(current_active_user)):
