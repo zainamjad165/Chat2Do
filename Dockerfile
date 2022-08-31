@@ -12,8 +12,8 @@ RUN apt-get update && \
 
 COPY Pipfile.lock Pipfile ./
 RUN pip install -q pipenv
-RUN pipenv install
 
 COPY . ./
 RUN pipenv shell
+RUN pipenv install
 CMD uvicorn --host=0.0.0.0 app.app:app
