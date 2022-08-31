@@ -9,6 +9,12 @@ database = databases.Database(DATABASE_URL)
 metadata = sqlalchemy.MetaData()
 
 #MODELS 
+users = sqlalchemy.Table(
+    "users",
+    metadata,
+    sqlalchemy.Column("username", sqlalchemy.String)
+)
+
 todos = sqlalchemy.Table(
     "todos",
     metadata,
@@ -47,6 +53,9 @@ class AddTodo(BaseModel):
 class SeeTodo(BaseModel):
     tittle: str
     description : str
+
+class SeeUser(BaseModel):
+    username: str
 
 class AddMessage(BaseModel):
     message: str
