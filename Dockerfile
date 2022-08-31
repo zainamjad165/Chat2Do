@@ -10,10 +10,8 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends netcat && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY Pipfile.lock Pipfile ./
-RUN pip install -q pipenv
+COPY requirements.txt ./
 
+pip install -r requirements.txt
 COPY . ./
-RUN pipenv shell
-RUN pipenv install
 CMD uvicorn --host=0.0.0.0 app.app:app
