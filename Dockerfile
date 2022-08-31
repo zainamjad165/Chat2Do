@@ -12,6 +12,6 @@ RUN apt-get update && \
 
 COPY requirements.txt ./
 
-pip install -r requirements.txt
+RUN pip install -r requirements.txt
 COPY . ./
 CMD uvicorn --host=0.0.0.0 app.app:app
