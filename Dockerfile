@@ -11,7 +11,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY Pipfile.lock Pipfile ./
-RUN pip install pipenv && \
+RUN pip install -q pipenv && \
     pipenv install
 
 COPY . ./
