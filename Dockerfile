@@ -10,7 +10,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends netcat && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY Pipenv.lock Pipenv ./
+COPY Pipfile.lock Pipfile ./
 RUN pip install pipenv && \
     pipenv install
 
