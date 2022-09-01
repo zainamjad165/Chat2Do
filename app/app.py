@@ -46,7 +46,7 @@ async def create_user(email: str, password: str):
 
 
 @app.post("/signup", include_in_schema=False)
-async def registration(request: Request):
+async def registration(response: Response,request: Request):
     form = await request.form()
     email = form.get("email")
     password = form.get("password")
@@ -61,23 +61,33 @@ async def registration(request: Request):
         username=email.split('@')[0]
         query = users.insert().values(username = username)
         adding_user=await database.execute(query)
-        msg = "successfully registered"
-        return templates.TemplateResponse("signup.html", {"request": request, "msg": msg})
+        html_content = """
+            <html>
+            <head>
+                <meta http-equiv="refresh" content="7; url='/" />
+            </head>
+            <body>
+                <p>Successfully Registered! Redirecting to login Please follow <a href="/">this link</a>.</p>
+            </body>
+            </html>
+
+        """
+        return HTMLResponse(content=html_content, headers=response.headers, status_code=200)
         
 
-@app.get("/login", include_in_schema=False)
+@app.get("/", include_in_schema=False)
 async def get(request:Request, msg:str=None):
     try:
         token = request.cookies.get("fastapiusersauth")
         if not token:
-            return templates.TemplateResponse("home.html",{"request":request, "msg":msg})
+            return templates.TemplateResponse("login.html",{"request":request, "msg":msg})
         else:
-            return templates.TemplateResponse("afterlogin.html",{"request":request, "msg":msg})
+            return templates.TemplateResponse("home.html",{"request":request, "msg":msg})
     except:
-        return templates.TemplateResponse("afterlogin.html",{"request":request, "msg":msg})
+        return templates.TemplateResponse("home.html",{"request":request, "msg":msg})
 
 
-@app.post("/login", include_in_schema=False)
+@app.post("/", include_in_schema=False)
 async def login(response: Response, request: Request, credentials: OAuth2PasswordRequestForm = Depends(),
     user_manager= Depends(get_user_manager)):
     user = await user_manager.authenticate(credentials)
@@ -90,7 +100,7 @@ async def login(response: Response, request: Request, credentials: OAuth2Passwor
                 <meta http-equiv="refresh" content="7; url='/home" />
             </head>
             <body>
-                <p>Successfully logged in redirecting to home Please follow <a href="/home">this link</a>.</p>
+                <p>Successfully logged in! Redirecting to home Please follow <a href="/home">this link</a>.</p>
             </body>
             </html>
 
@@ -101,9 +111,26 @@ async def login(response: Response, request: Request, credentials: OAuth2Passwor
         return templates.TemplateResponse("home.html",{"request":request, "errors": errors})
 
 
-@app.get("/logout", include_in_schema=False)
+@app.get("/ask", include_in_schema=False)
 async def get(request:Request, msg:str=None):
-    response = templates.TemplateResponse("index.html",{"request":request, "msg":msg})
+    response = templates.TemplateResponse("ask.html",{"request":request, "msg":msg})
+    return response
+
+
+@app.get("/logout", include_in_schema=False)
+async def get():
+    html_content = """
+            <html>
+            <head>
+                <meta http-equiv="refresh" content="7; url='/" />
+            </head>
+            <body>
+                <p>You have been logged out! Redirecting to login Please follow <a href="/">this link</a>.</p>
+            </body>
+            </html>
+
+        """
+    response = HTMLResponse(content=html_content, status_code=200)
     response.delete_cookie("fastapiusersauth")
     return response
 
@@ -111,7 +138,7 @@ async def get(request:Request, msg:str=None):
 @app.get("/home", include_in_schema=False)
 async def get(request:Request,user: User = Depends(current_active_user)):
     username=user.email.split('@')[0]
-    return templates.TemplateResponse("afterlogin.html",{"request":request,"username":username})
+    return templates.TemplateResponse("home.html",{"request":request,"username":username})
 
 
 @app.get("/todo", include_in_schema=False)
@@ -134,9 +161,10 @@ async def create_a_todo(request: Request,user: User = Depends(current_active_use
     description = form.get("description")
     query = todos.insert().values(tittle = tittle,description = description, username = user.email)
     adding_todo=await database.execute(query)
+    msg = "todo created"
     query = todos.select().where(todos.c.username == user.email)
     todos_in_db=await database.fetch_all(query)
-    return templates.TemplateResponse("creatatodo.html",{"request":request,"todos_in_db":todos_in_db})
+    return templates.TemplateResponse("creatatodo.html",{"request":request,"todos_in_db":todos_in_db,"msg":msg})
 
 
 @app.post("/seetodos", include_in_schema=False)
@@ -145,9 +173,10 @@ async def get(request:Request,user: User = Depends(current_active_user)):
     id = form.get("id")
     query = todos.delete().where(todos.c.id == id and todos.c.username == user.email)
     del_todo=await database.execute(query)
+    msg = "completed todo has been removed"
     query = todos.select().where(todos.c.username == user.email)
     todos_in_db=await database.fetch_all(query)
-    return templates.TemplateResponse("seetodos.html",{"request":request,"todos_in_db":todos_in_db})
+    return templates.TemplateResponse("seetodos.html",{"request":request,"todos_in_db":todos_in_db,"msg":msg})
     
 
 @app.get("/seetodos", include_in_schema=False)
@@ -160,22 +189,40 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
 @app.get("/chat", include_in_schema=False)
 async def get(request:Request,user: User = Depends(current_active_user)):
     username=user.email.split('@')[0]
-    query = users.select()
+    return templates.TemplateResponse("chat.html",{"request":request,"username":username})
+
+
+@app.get("/users", include_in_schema=False)
+async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
+    username=user.email.split('@')[0]
+    query = users.select().where(users.c.username != username)
     users_in_db=await database.fetch_all(query)
-    return templates.TemplateResponse("chat.html",{"request":request,"username":username,"users_in_db":users_in_db})
+    return templates.TemplateResponse("users.html",{"request":request,"users_in_db":users_in_db,"msg":msg,"username":username})
+
+@app.post("/users", include_in_schema=False)
+async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
+    form = await request.form()
+    to = form.get("username")
+    message = form.get("message")
+    query = texts.insert().values(message = message , to = to , by = user.email)
+    await database.execute(query)
+    query = texts.select().where(texts.c.to == to )
+    text_in_private=await database.fetch_all(query)
+    query = texts.select().where(texts.c.by == user.email )
+    text_by_in_private=await database.fetch_all(query)
+    return templates.TemplateResponse("seeprivatechat.html",{"request":request,"text_in_private":text_in_private,
+    "text_by_in_private":text_by_in_private,"msg":msg,"to":to})
 
 
 @app.get("/privatechat", include_in_schema=False)
 async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
     username=user.email.split('@')[0]
-    query = users.select().where(users.c.username != username)
-    users_in_db=await database.fetch_all(query)
-    query = texts.select().where(texts.c.to == user.email )
+    query = texts.select().where(texts.c.to == user.email)
     text_in_private=await database.fetch_all(query)
     query = texts.select().where(texts.c.by == user.email )
     text_by_in_private=await database.fetch_all(query)
     return templates.TemplateResponse("seeprivatechat.html",{"request":request,"text_in_private":text_in_private,
-    "text_by_in_private":text_by_in_private,"users_in_db":users_in_db,"msg":msg})
+    "text_by_in_private":text_by_in_private,"msg":msg,"username":username})
 
 
 @app.post("/privatechat", include_in_schema=False)
@@ -185,7 +232,7 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
     to = form.get("to")
     query = texts.insert().values(message = message , to = to , by = user.email)
     await database.execute(query)
-    query = texts.select().where(texts.c.to == user.email )
+    query = texts.select().where(texts.c.to == user.email)
     text_in_private=await database.fetch_all(query)
     query = texts.select().where(texts.c.by == user.email )
     text_by_in_private=await database.fetch_all(query)
@@ -195,9 +242,9 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
 
 @app.get("/groupchat", include_in_schema=False)
 async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
-    query = messages.select().where(messages.c.by != user.email )
+    query = messages.select().where(messages.c.by != user.email.split('@')[0])
     messages_in_group=await database.fetch_all(query)
-    query = messages.select().where(messages.c.by == user.email )
+    query = messages.select().where(messages.c.by == user.email.split('@')[0])
     my_messages=await database.fetch_all(query)
     return templates.TemplateResponse("seegroupchat.html",{"request":request,"my_messages":my_messages,
     "messages_in_group":messages_in_group,"msg":msg})
@@ -207,11 +254,11 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
 async def create_text(request: Request,user: User = Depends(current_active_user)):
     form = await request.form()
     message = form.get("message")
-    query = messages.insert().values(message = message, by = user.email)
+    query = messages.insert().values(message = message, by = user.email.split('@')[0])
     await database.execute(query)
-    query = messages.select().where(messages.c.by != user.email )
+    query = messages.select().where(messages.c.by != user.email.split('@')[0] )
     messages_in_group=await database.fetch_all(query)
-    query = messages.select().where(messages.c.by == user.email )
+    query = messages.select().where(messages.c.by == user.email.split('@')[0] )
     my_messages=await database.fetch_all(query)
     return templates.TemplateResponse("seegroupchat.html",{"request":request,"my_messages":my_messages,"messages_in_group":messages_in_group})
 

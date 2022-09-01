@@ -2,29 +2,23 @@
 
 {% block contant %}
 <div class="container text-center">
+    {% include 'navbar2.html' %}
+    <br>
     {% if msg %}
         <div class="alert alert-success" role="alert">
             {{msg}}
         </div>
     {% endif %}
-    <h1>Login Here</h1>
-        {% for error in errors %}
-			<div class="alert alert-danger" role="alert">
-				{{ error }}
-			</div>
-		{% endfor %}
-    <form method="POST">
-        <div class="mb-3">
-            <label for="username" class="form-label">Email address</label>
-            <input type="email" required class="form-control" name="username" aria-describedby="emailHelp" placeholder="Enter Your Email Here">
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" required class="form-control" name="password" placeholder="Enter Your Password Here">
-        </div>
-        <button type="submit" class="btn btn-primary">LOGIN</button>
-        <p class="link">Don't have an account<br>
-        <a href="/signup">SIGNUP</a> here</a></p>
-    </form>
+    <br>
+    <div class="menu">
+        <ul>
+            <br>
+            <a class="btn btn-primary" href="/todo">TODO</a>
+            <br>
+            <br>
+            <br>
+            <a class="btn btn-primary" href="/chat">CHAT</a>
+        </ul>
+    </div> 
 </div>
 {% endblock %}

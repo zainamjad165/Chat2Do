@@ -2,7 +2,14 @@
 {% block contant %}
     <div class="container text-center">
         {% include 'navbar2.html' %}
-        <h1>See Todos Here</h1>
+        {% if msg %}
+            <div class="alert alert-success" role="alert" >
+                {{msg}}
+            </div>
+        {% endif %}
+        <br>
+        <h1>Todos</h1>
+        <br>
         <table class="table">
             <thead>
               <tr>

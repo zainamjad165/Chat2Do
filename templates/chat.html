@@ -3,22 +3,17 @@
 {% block contant %}
     <div class="container text-center">
         {% include 'navbar2.html' %}
+        <br>
         <div class="icon">
             <h2 class="logo">CHATROOM</h2>
-            <br>
         </div>
+        <br>
         <div class="menu">
             <ul>
-                {% for item in users_in_db %}
-                <form  method="POST">
-                    <div class="mb-3">
-                        <input type="hidden" required name="username" value="{{item.username}}" >
-                    </div>
-                    <button type="submit" class="btn btn-primary">{{item.username}}</button>
-                </form>
-                {% endfor %}
-                <li><a href="/groupchat">GROUP CHAT</a></li>
-                <li><a href="/privatechat">PRIVATE CHAT</a></li>
+                <a class="btn btn-primary" href="/groupchat">GROUP</a>
+                <br>
+                <br>
+                <a class="btn btn-primary" href="/users">PRIVATE</a>
             </ul>
         </div>
     </div>

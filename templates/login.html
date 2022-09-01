@@ -2,16 +2,34 @@
 
 {% block contant %}
 <div class="container text-center">
-    <div class="main">
-        <div class="icon">
-            <h2 class="logo">MY APP 1</h2>
+    {% if msg %}
+        <div class="alert alert-success" role="alert">
+            {{msg}}
         </div>
-        <div class="menu">
-            <ul>
-                <li><a href="todos.html">TODOS</a></li>
-                <li><a href="chat.html">CHAT</a></li>
-            </ul>
-        </div> 
-    </div>
+    {% endif %}
+    <br>
+    <h1>Login Here</h1>
+    <br>
+        {% for error in errors %}
+			<div class="alert alert-danger" role="alert">
+				{{ error }}
+			</div>
+		{% endfor %}
+    <form method="POST">
+        <div class="mb-3">
+            <label for="username" class="form-label">Email address</label>
+            <input type="email" required class="form-control" name="username" aria-describedby="emailHelp" placeholder="Enter Your Email Here">
+        </div>
+        <br>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" required class="form-control" name="password" placeholder="Enter Your Password Here">
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">LOGIN</button>
+        <br>
+        <p class="link">Don't have an account<br>
+        <a href="/signup">SIGNUP</a> here</a></p>
+    </form>
 </div>
 {% endblock %}

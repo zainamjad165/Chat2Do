@@ -2,25 +2,24 @@
 {% block contant %}
     <div class="container text-center">
         {% include 'navbar2.html' %}
+        <br>
         {% if msg %}
             <div class="alert alert-success" role="alert">
                 {{msg}}
             </div>
         {% endif %}
-        {% for error in errors %}
-			<div class="alert alert-danger" role="alert">
-				{{ error }}
-			</div>
-        {% endfor %}
         <h3>Create Todo</h3>
-        <form  method="POST" id="form2">
+        <br>
+        <form  method="POST" id="form">
             <div class="mb-3">
 		    	<input type="text" class="form-control" required name="tittle" placeholder="Enter tittle">
             </div>
+            <br>
             <div class="mb-3">
     			<textarea class="form-control" required name="description" placeholder="Enter todo description"></textarea>
             </div>
-            <button type="submit"  form="form2" class="btn btn-primary">Create</button>
+            <br>
+            <button type="submit"  form="form" class="btn btn-primary">Create</button>
         </form>
     </div>
 {% endblock %}

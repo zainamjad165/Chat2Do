@@ -3,13 +3,17 @@
 {% block contant %}
     <div class="container text-center">
         {% include 'navbar2.html' %}
+        <br>
         <div class="icon">
-            <h2 class="logo">MY TODOS</h2>
+            <h2 class="logo">TODO</h2>
         </div>
+        <br>
         <div class="menu">
             <ul>
-                <li><a href="/creatatodo">CREATE TODO</a></li>
-                <li><a href="/seetodos">SEE TODO</a></li>
+                <a class="btn btn-primary" href="/creatatodo">Create</a>
+                <br>
+                <br>
+                <a class="btn btn-primary" href="/seetodos">List</a>
             </ul>
         </div>
     </div>

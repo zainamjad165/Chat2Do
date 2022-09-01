@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block contant %}
+    <div class="container text-center">
+        {% include 'navbar2.html' %}
+        <div class="icon">
+            <h2 class="logo">Users</h2>
+            <br>
+        </div>
+        <div class="menu">
+            <ul>
+                {% for item in users_in_db %}
+                <form  method="POST">
+                    <div class="mb-3">
+                        <input type="hidden" required name="username" value="{{item.username}}" >
+                    </div>
+                    <button type="submit" class="btn btn-primary">{{item.username}}</button>
+                </form>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
