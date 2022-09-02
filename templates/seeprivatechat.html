@@ -1,9 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>chat</title>
-    <link rel="stylesheet" href="/static/chat.css">
-</head>
+{% extends "base.html" %}
+
+{% block title %}
+<title>Chat</title>
+<link rel="stylesheet" href="/static/chat.css">
+{% endblock %}
+
+{% block contant %}
+<div class="container text-center">
+	{% include 'navbar2.html' %}
+</div>
+<br>
+
 <body>
 	<div id="container">
 		<main>
@@ -45,5 +52,4 @@
 			</form>
 		</main>
 	</div>
-</body>
-</html>
+{% endblock %}

@@ -1,9 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Group Chat</title>
-    <link rel="stylesheet" href="/static/chat.css">
-</head>
+{% extends "base.html" %}
+
+{% block title %}
+<title>Group Chat</title>
+<link rel="stylesheet" href="/static/chat.css">
+{% endblock %}
+
+{% block contant %}
+<div class="container text-center">
+	{% include 'navbar2.html' %}
+</div>
+<br>
+
 <body>
 	<div id="container">
 		<main>
@@ -15,26 +22,26 @@
 			<ul id="chat">
 				<li class="you">
 					{% for item in messages_in_group %}
-						<div class="entete">
-							<span class="status green"></span>
-							<h3>{{item.by}}</h3>
-						</div>
-						<div class="triangle"></div>
-						<div class="message">
-							{{item.message}}
-						</div>
+					<div class="entete">
+						<span class="status green"></span>
+						<h3>{{item.by}}</h3>
+					</div>
+					<div class="triangle"></div>
+					<div class="message">
+						{{item.message}}
+					</div>
 					{% endfor %}
 				</li>
 				<li class="me">
 					{% for item in my_messages %}
-						<div class="triangle"></div>
-						<div class="message">
-							{{item.message}}
-						</div>
+					<div class="triangle"></div>
+					<div class="message">
+						{{item.message}}
+					</div>
 					{% endfor %}
 				</li>
 			</ul>
-			<form  method="POST">
+			<form method="POST">
 				<div class="mb-3">
 					<textarea class="form-control" required name="message" placeholder="Enter the text"></textarea>
 				</div>
@@ -42,5 +49,4 @@
 			</form>
 		</main>
 	</div>
-</body>
-</html>
+{% endblock %}
