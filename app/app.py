@@ -35,14 +35,11 @@ async def get(request:Request):
 
 
 async def create_user(email: str, password: str):
-    try:
-        async with get_async_session_context() as session:
-            async with get_user_db_context(session) as user_db:
-                async with get_user_manager_context(user_db) as user_manager:
-                    user = await user_manager.create(UserCreate(email=email, password=password))
-                    print(f"User created {user}")
-    except :
-        print(f"User with email {email} already exists")
+    async with get_async_session_context() as session:
+        async with get_user_db_context(session) as user_db:
+            async with get_user_manager_context(user_db) as user_manager:
+                user = await user_manager.create(UserCreate(email=email, password=password))
+                print(f"User created {user}")
 
 
 @app.post("/signup", include_in_schema=False)
@@ -60,7 +57,7 @@ async def registration(response: Response,request: Request):
     else:
         username=email.split('@')[0]
         query = users.insert().values(username = username)
-        adding_user=await database.execute(query)
+        await database.execute(query)
         html_content = """
             <html>
             <head>
@@ -76,7 +73,7 @@ async def registration(response: Response,request: Request):
         
 
 @app.get("/", include_in_schema=False)
-async def get(request:Request, msg:str=None):
+async def login(request:Request, msg:str=None):
     try:
         token = request.cookies.get("fastapiusersauth")
         if not token:
@@ -88,27 +85,25 @@ async def get(request:Request, msg:str=None):
 
 
 @app.post("/", include_in_schema=False)
-async def login(response: Response, request: Request, credentials: OAuth2PasswordRequestForm = Depends(),
-    user_manager= Depends(get_user_manager)):
+async def login(response: Response, request: Request, credentials: OAuth2PasswordRequestForm = Depends(),user_manager=Depends(get_user_manager)):
     user = await user_manager.authenticate(credentials)
     errors = []
     if user:
         await auth_backend.login(get_jwt_strategy(), user, response)
         html_content = """
-            <html>
-            <head>
-                <meta http-equiv="refresh" content="7; url='/home" />
-            </head>
-            <body>
-                <p>Successfully logged in! Redirecting to home Please follow <a href="/home">this link</a>.</p>
-            </body>
-            </html>
-
+        <html>
+        <head>
+            <meta http-equiv="refresh" content="7; url='/home" />
+        </head>
+        <body>
+            <p>Successfully logged in! Redirecting to home Please follow <a href="/home">this link</a>.</p>
+        </body>
+        </html>
         """
         return HTMLResponse(content=html_content, headers=response.headers, status_code=200)
     else:
         errors.append("incorrect password or email")
-        return templates.TemplateResponse("home.html",{"request":request, "errors": errors})
+        return templates.TemplateResponse("login.html",{"request":request, "errors": errors})
 
 
 @app.get("/ask", include_in_schema=False)
