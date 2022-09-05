@@ -10,6 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 import contextlib
 from app.users import get_user_manager
+from datetime import datetime
 
 app = FastAPI()
 
@@ -249,7 +250,7 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
 async def create_text(request: Request,user: User = Depends(current_active_user)):
     form = await request.form()
     message = form.get("message")
-    query = messages.insert().values(message = message, by = user.email.split('@')[0])
+    query = messages.insert().values(message = message, by = user.email.split('@')[0],created_at = (datetime.now()).strftime("%H:%M"))
     await database.execute(query)
     query = messages.select().where(messages.c.by != user.email.split('@')[0] )
     messages_in_group=await database.fetch_all(query)
@@ -284,7 +285,7 @@ async def read_users(user: User = Depends(current_active_user)):
 
 @app.post("/create message for group", response_model=SeeMessage)
 async def create_message(message: AddMessage, user: User = Depends(current_active_user)):
-    query = messages.insert().values(message = message.message, by = user.email)
+    query = messages.insert().values(message = message.message, by = user.email,created_at = (datetime.now()).strftime("%H:%M"))
     last_record_id = await database.execute(query)
     query = messages.select()
     created_text_for_group = await database.fetch_one(query)

@@ -30,6 +30,7 @@ texts = sqlalchemy.Table(
     sqlalchemy.Column("message", sqlalchemy.String),
     sqlalchemy.Column("to",sqlalchemy.String),
     sqlalchemy.Column("by",sqlalchemy.String),
+    sqlalchemy.Column("created_at",sqlalchemy.String),
 )
 
 messages = sqlalchemy.Table(
@@ -37,6 +38,7 @@ messages = sqlalchemy.Table(
     metadata,
     sqlalchemy.Column("message", sqlalchemy.String),
     sqlalchemy.Column("by",sqlalchemy.String),
+    sqlalchemy.Column("created_at",sqlalchemy.String),
 )
 
 #BINDING DATABASE
@@ -59,15 +61,19 @@ class SeeUser(BaseModel):
 
 class AddMessage(BaseModel):
     message: str
+    created_at: str
     
 class SeeMessage(BaseModel):
     by: str
     message: str
+    created_at: str
 
 class AddText(BaseModel):
     message: str
     to: str
+    created_at: str
 
 class SeeText(BaseModel):
     by: str
     message: str
+    created_at: str
