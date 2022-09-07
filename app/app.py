@@ -1,3 +1,4 @@
+from queue import Empty
 from fastapi import Depends, FastAPI, Request, Response
 from typing import List
 from app.db import User, create_db_and_tables, get_user_db,get_async_session
@@ -7,7 +8,7 @@ from main import users,todos,texts,messages,database,AddMessage,SeeMessage,AddTe
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse , RedirectResponse
 import contextlib
 from app.users import get_user_manager
 from datetime import datetime
@@ -195,59 +196,62 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
     users_in_db=await database.fetch_all(query)
     return templates.TemplateResponse("users.html",{"request":request,"users_in_db":users_in_db,"msg":msg,"username":username})
 
+
 @app.post("/users", include_in_schema=False)
 async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
+    username=user.email.split('@')[0]
     form = await request.form()
     to = form.get("username")
-    message = form.get("message")
-    query = texts.insert().values(message = message , to = to , by = user.email)
-    await database.execute(query)
-    query = texts.select().where(texts.c.to == to )
+    query = texts.select().where(texts.c.to == user.email and texts.c.by == to)
     text_in_private=await database.fetch_all(query)
-    query = texts.select().where(texts.c.by == user.email )
+    query = texts.select().where(texts.c.by == user.email and texts.c.to == to)
     text_by_in_private=await database.fetch_all(query)
     return templates.TemplateResponse("seeprivatechat.html",{"request":request,"text_in_private":text_in_private,
-    "text_by_in_private":text_by_in_private,"msg":msg,"to":to})
+    "text_by_in_private":text_by_in_private,"username":username,"to":to})
+    # return RedirectResponse("/privatechat")
 
 
 @app.get("/privatechat", include_in_schema=False)
-async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
+async def get(request:Request,user: User = Depends(current_active_user)):
     username=user.email.split('@')[0]
     query = texts.select().where(texts.c.to == user.email)
     text_in_private=await database.fetch_all(query)
     query = texts.select().where(texts.c.by == user.email )
     text_by_in_private=await database.fetch_all(query)
     return templates.TemplateResponse("seeprivatechat.html",{"request":request,"text_in_private":text_in_private,
-    "text_by_in_private":text_by_in_private,"msg":msg,"username":username})
+    "text_by_in_private":text_by_in_private,"username":username})
 
 
 @app.post("/privatechat", include_in_schema=False)
 async def create_text(request: Request,user: User = Depends(current_active_user)):
+    username=user.email.split('@')[0]
     form = await request.form()
     message = form.get("message")
-    to = form.get("to")
-    query = texts.insert().values(message = message , to = to , by = user.email)
+    query = texts.insert().values(message = message , by = user.email)
     await database.execute(query)
     query = texts.select().where(texts.c.to == user.email)
     text_in_private=await database.fetch_all(query)
     query = texts.select().where(texts.c.by == user.email )
     text_by_in_private=await database.fetch_all(query)
     return templates.TemplateResponse("seeprivatechat.html",{"request":request,"text_in_private":text_in_private,
-    "text_by_in_private":text_by_in_private})
+    "text_by_in_private":text_by_in_private,"username":username})
+
 
 
 @app.get("/groupchat", include_in_schema=False)
 async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
+    username=user.email.split('@')[0]
     query = messages.select().where(messages.c.by != user.email.split('@')[0])
     messages_in_group=await database.fetch_all(query)
     query = messages.select().where(messages.c.by == user.email.split('@')[0])
     my_messages=await database.fetch_all(query)
-    return templates.TemplateResponse("seegroupchat.html",{"request":request,"my_messages":my_messages,
-    "messages_in_group":messages_in_group,"msg":msg})
+    return templates.TemplateResponse("groupchat.html",{"request":request,"my_messages":my_messages,
+    "messages_in_group":messages_in_group,"msg":msg,"username":username})
 
 
 @app.post("/groupchat", include_in_schema=False)
 async def create_text(request: Request,user: User = Depends(current_active_user)):
+    username=user.email.split('@')[0]
     form = await request.form()
     message = form.get("message")
     query = messages.insert().values(message = message, by = user.email.split('@')[0],created_at = (datetime.now()).strftime("%H:%M"))
@@ -256,7 +260,8 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
     messages_in_group=await database.fetch_all(query)
     query = messages.select().where(messages.c.by == user.email.split('@')[0] )
     my_messages=await database.fetch_all(query)
-    return templates.TemplateResponse("seegroupchat.html",{"request":request,"my_messages":my_messages,"messages_in_group":messages_in_group})
+    return templates.TemplateResponse("groupchat.html",{"request":request,"my_messages":my_messages,
+    "messages_in_group":messages_in_group,"username":username})
 
 
 #FASTAPI DOCS

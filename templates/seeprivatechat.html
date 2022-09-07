@@ -10,54 +10,48 @@
 	{% include 'navbar2.html' %}
 </div>
 <br>
-
-<body>
-	<div id="container">
-		<main>
-			<header>
-				<div>
-					<h2>to:  {{to}}</h2>
-				</div>
-			</header>
-			<ul id="chat">
-				<li class="you">
-					{% for item in text_in_private %}
-						<div class="entete">
-							<span class="status green"></span>
-							<h3>{{item.by}}</h3>
-						</div>
-						<div class="triangle"></div>
-						<div class="message">
-							{{item.message}}
-						</div>
-						<div class="entete">
-							<span class="status green"></span>
-							<h3>{{item.created_at}}</h3>
-						</div>
-					{% endfor %}
-				</li>
-				<li class="me">
-					{% for item in text_by_in_private %}
-						<div class="triangle"></div>
-						<div class="message">
-							{{item.message}}
-						</div>
-						<div class="entete">
-							<span class="status green"></span>
-							<h3>{{item.created_at}}</h3>
-						</div>
-					{% endfor %}
-				</li>
-			</ul>
-			<form  method="POST">
-				<div class="mb-3">
-					<input type="hidden" required name="to" value="{{to}}" placeholder="enter the reciver email">
-				</div>
-				<div class="mb-3">
-					<textarea class="form-control" required name="message" placeholder="Enter the text"></textarea>
-				</div>
-				<button type="submit" class="btn btn-primary">Send</button>
-			</form>
-		</main>
-	</div>
+<div id="container">
+	<main>
+		<header>
+			<div>
+				<h2>to:{{to}}</h2>
+			</div>
+		</header>
+		<ul id="chat">
+			<li class="you">
+				{% for item in text_in_private %}
+					<div class="triangle"></div>
+					<div class="message">
+						{{item.message}}
+					</div>
+					<div class="entete">
+						<span class="status green"></span>
+						<h3>{{item.created_at}}</h3>
+					</div>
+				{% endfor %}
+			</li>
+			<li class="me">
+				{% for item in text_by_in_private %}
+					<div class="triangle"></div>
+					<div class="message">
+						{{item.message}}
+					</div>
+					<div class="entete">
+						<span class="status green"></span>
+						<h3>{{item.created_at}}</h3>
+					</div>
+				{% endfor %}
+			</li>
+		</ul>
+		<form  method="POST">
+			<div class="mb-3">
+				<input type="hidden" required name="to" value="{{to}}">
+			</div>
+			<div class="mb-3">
+				<textarea class="form-control" required name="message" placeholder="Enter the text"></textarea>
+			</div>
+			<button type="submit" class="btn btn-primary">Send</button>
+		</form>
+	</main>
+</div>
 {% endblock %}

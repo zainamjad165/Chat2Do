@@ -10,7 +10,7 @@
         <div class="menu">
             <ul>
                 {% for item in users_in_db %}
-                <form  method="POST">
+                <form method="POST">
                     <div class="mb-3">
                         <input type="hidden" required name="username" value="{{item.username}}" >
                     </div>
