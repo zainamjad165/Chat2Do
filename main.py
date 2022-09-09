@@ -1,3 +1,4 @@
+from unittest import defaultTestLoader
 import databases
 import sqlalchemy
 from pydantic import BaseModel
@@ -13,6 +14,12 @@ users = sqlalchemy.Table(
     "users",
     metadata,
     sqlalchemy.Column("username", sqlalchemy.String)
+)
+
+reciver = sqlalchemy.Table(
+    "reciver",
+    metadata,
+    sqlalchemy.Column("reciver", sqlalchemy.String)
 )
 
 todos = sqlalchemy.Table(

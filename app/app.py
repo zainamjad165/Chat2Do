@@ -4,12 +4,12 @@ from typing import List
 from app.db import User, create_db_and_tables, get_user_db,get_async_session
 from app.schemas import UserCreate, UserRead
 from app.users import auth_backend, current_active_user, fastapi_users, get_jwt_strategy
-from main import users,todos,texts,messages,database,AddMessage,SeeMessage,AddText,AddTodo,SeeText,SeeTodo,SeeUser
+from main import users,todos,texts,messages,reciver,database,AddMessage,SeeMessage,AddText,AddTodo,SeeText,SeeTodo,SeeUser
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse , RedirectResponse
-import contextlib
+import contextlib,re
 from app.users import get_user_manager
 from datetime import datetime
 
@@ -198,28 +198,27 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
 
 
 @app.post("/users", include_in_schema=False)
-async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
-    username=user.email.split('@')[0]
+async def get(response: Response,request:Request):
     form = await request.form()
     to = form.get("username")
-    query = texts.select().where(texts.c.to == user.email and texts.c.by == to)
-    text_in_private=await database.fetch_all(query)
-    query = texts.select().where(texts.c.by == user.email and texts.c.to == to)
-    text_by_in_private=await database.fetch_all(query)
-    return templates.TemplateResponse("seeprivatechat.html",{"request":request,"text_in_private":text_in_private,
-    "text_by_in_private":text_by_in_private,"username":username,"to":to})
-    # return RedirectResponse("/privatechat")
+    query = reciver.update().values(reciver = to)
+    await database.execute(query)
+    return RedirectResponse(url=f"/privatechat", status_code=303)
 
 
 @app.get("/privatechat", include_in_schema=False)
-async def get(request:Request,user: User = Depends(current_active_user)):
+async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
     username=user.email.split('@')[0]
-    query = texts.select().where(texts.c.to == user.email)
+    query = reciver.select()
+    is_for = await database.fetch_all(query)
+    for item in is_for:
+        to=item.reciver
+    query = texts.select().where(texts.c.to == user.email.split('@')[0] and texts.c.by == to)
     text_in_private=await database.fetch_all(query)
-    query = texts.select().where(texts.c.by == user.email )
+    query = texts.select().where(texts.c.to == to and texts.c.by == user.email.split('@')[0])
     text_by_in_private=await database.fetch_all(query)
-    return templates.TemplateResponse("seeprivatechat.html",{"request":request,"text_in_private":text_in_private,
-    "text_by_in_private":text_by_in_private,"username":username})
+    return templates.TemplateResponse("privatechat.html",{"request":request,"is_for":is_for,"text_in_private":text_in_private,
+    "text_by_in_private":text_by_in_private,"username":username,"msg":msg})
 
 
 @app.post("/privatechat", include_in_schema=False)
@@ -227,13 +226,17 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
     username=user.email.split('@')[0]
     form = await request.form()
     message = form.get("message")
-    query = texts.insert().values(message = message , by = user.email)
+    query = reciver.select()
+    is_for = await database.fetch_all(query)
+    for item in is_for:
+        to=item.reciver
+    query = texts.insert().values(message = message ,to = to, by = user.email.split('@')[0], created_at = (datetime.now()).strftime("%H:%M"))
     await database.execute(query)
-    query = texts.select().where(texts.c.to == user.email)
+    query = texts.select().where(texts.c.to == user.email.split('@')[0] and texts.c.by == to)
     text_in_private=await database.fetch_all(query)
-    query = texts.select().where(texts.c.by == user.email )
+    query = texts.select().where(texts.c.by == user.email.split('@')[0] and texts.c.to == to)
     text_by_in_private=await database.fetch_all(query)
-    return templates.TemplateResponse("seeprivatechat.html",{"request":request,"text_in_private":text_in_private,
+    return templates.TemplateResponse("privatechat.html",{"request":request,"is_for":is_for,"text_in_private":text_in_private,
     "text_by_in_private":text_by_in_private,"username":username})
 
 

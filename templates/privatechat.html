@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Chat</title>
+<link rel="stylesheet" href="/static/chat.css">
+{% endblock %}
+
+{% block contant %}
+<div class="container text-center">
+	{% include 'navbar2.html' %}
+</div>
+<br>
+<div id="container">
+	<main>
+		<header>
+			<div>
+				{% for item in is_for %}
+					<h2>to:{{item.reciver}}</h2>
+				{% endfor %}
+			</div>
+		</header>
+		<ul id="chat">
+			<li class="you">
+				{% for item in text_in_private %}
+					<div class="triangle"></div>
+					<div class="message">
+						{{item.message}}
+					</div>
+					<div class="entete">
+						<span class="status green"></span>
+						<h3>{{item.created_at}}</h3>
+					</div>
+				{% endfor %}
+			</li>
+			<li class="me">
+				{% for item in text_by_in_private %}
+					<div class="triangle"></div>
+					<div class="message">
+						{{item.message}}
+					</div>
+					<div class="entete">
+						<span class="status green"></span>
+						<h3>{{item.created_at}}</h3>
+					</div>
+				{% endfor %}
+			</li>
+		</ul>
+		<form  method="POST">
+			<div class="mb-3">
+				<input type="hidden" required name="to" value="{{to}}">
+			</div>
+			<div class="mb-3">
+				<textarea class="form-control" required name="message" placeholder="Enter the text"></textarea>
+			</div>
+			<button type="submit" class="btn btn-primary">Send</button>
+		</form>
+	</main>
+</div>
+{% endblock %}
