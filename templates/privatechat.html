@@ -15,7 +15,7 @@
 		<header>
 			<div>
 				{% for item in is_for %}
-					<h2>to:{{item.reciver}}</h2>
+					<h2>{{item.reciver}}</h2>
 				{% endfor %}
 			</div>
 		</header>
@@ -27,7 +27,6 @@
 						{{item.message}}
 					</div>
 					<div class="entete">
-						<span class="status green"></span>
 						<h3>{{item.created_at}}</h3>
 					</div>
 				{% endfor %}
@@ -39,7 +38,6 @@
 						{{item.message}}
 					</div>
 					<div class="entete">
-						<span class="status green"></span>
 						<h3>{{item.created_at}}</h3>
 					</div>
 				{% endfor %}

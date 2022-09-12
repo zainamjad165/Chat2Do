@@ -19,7 +19,7 @@ users = sqlalchemy.Table(
 reciver = sqlalchemy.Table(
     "reciver",
     metadata,
-    sqlalchemy.Column("reciver", sqlalchemy.String)
+    sqlalchemy.Column("reciver", sqlalchemy.String) 
 )
 
 todos = sqlalchemy.Table(

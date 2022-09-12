@@ -28,11 +28,6 @@ main header > *{
 	vertical-align:top;
 }
 
-main header div{
-	margin-left:100px;
-	margin-right:100px;
-}
-
 #chat{
 	padding-left:0;
 	margin:0;

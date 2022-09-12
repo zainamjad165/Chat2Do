@@ -60,18 +60,7 @@ async def registration(response: Response,request: Request):
         username=email.split('@')[0]
         query = users.insert().values(username = username)
         await database.execute(query)
-        html_content = """
-            <html>
-            <head>
-                <meta http-equiv="refresh" content="7; url='/" />
-            </head>
-            <body>
-                <p>Successfully Registered! Redirecting to login Please follow <a href="/">this link</a>.</p>
-            </body>
-            </html>
-
-        """
-        return HTMLResponse(content=html_content, headers=response.headers, status_code=200)
+        return RedirectResponse(url=f"/", status_code=303)
         
 
 @app.get("/", include_in_schema=False)
@@ -116,18 +105,7 @@ async def get(request:Request, msg:str=None):
 
 @app.get("/logout", include_in_schema=False)
 async def get():
-    html_content = """
-            <html>
-            <head>
-                <meta http-equiv="refresh" content="7; url='/" />
-            </head>
-            <body>
-                <p>You have been logged out! Redirecting to login Please follow <a href="/">this link</a>.</p>
-            </body>
-            </html>
-
-        """
-    response = HTMLResponse(content=html_content, status_code=200)
+    response = RedirectResponse(url=f"/", status_code=303)
     response.delete_cookie("fastapiusersauth")
     return response
 
@@ -213,9 +191,9 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
     is_for = await database.fetch_all(query)
     for item in is_for:
         to=item.reciver
-    query = texts.select().where(texts.c.to == user.email.split('@')[0] and texts.c.by == to)
+    query = texts.select().where(texts.c.to == username, texts.c.by == to )
     text_in_private=await database.fetch_all(query)
-    query = texts.select().where(texts.c.to == to and texts.c.by == user.email.split('@')[0])
+    query = texts.select().where(texts.c.to == to, texts.c.by == username )
     text_by_in_private=await database.fetch_all(query)
     return templates.TemplateResponse("privatechat.html",{"request":request,"is_for":is_for,"text_in_private":text_in_private,
     "text_by_in_private":text_by_in_private,"username":username,"msg":msg})
@@ -230,11 +208,11 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
     is_for = await database.fetch_all(query)
     for item in is_for:
         to=item.reciver
-    query = texts.insert().values(message = message ,to = to, by = user.email.split('@')[0], created_at = (datetime.now()).strftime("%H:%M"))
+    query = texts.insert().values(message = message ,to = to, by = username, created_at = (datetime.now()).strftime("%I:%M%p"))
     await database.execute(query)
-    query = texts.select().where(texts.c.to == user.email.split('@')[0] and texts.c.by == to)
+    query = texts.select().where(texts.c.to == username, texts.c.by == to )
     text_in_private=await database.fetch_all(query)
-    query = texts.select().where(texts.c.by == user.email.split('@')[0] and texts.c.to == to)
+    query = texts.select().where(texts.c.to == to, texts.c.by == username )
     text_by_in_private=await database.fetch_all(query)
     return templates.TemplateResponse("privatechat.html",{"request":request,"is_for":is_for,"text_in_private":text_in_private,
     "text_by_in_private":text_by_in_private,"username":username})
@@ -244,9 +222,9 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
 @app.get("/groupchat", include_in_schema=False)
 async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
     username=user.email.split('@')[0]
-    query = messages.select().where(messages.c.by != user.email.split('@')[0])
+    query = messages.select().where(messages.c.by != username)
     messages_in_group=await database.fetch_all(query)
-    query = messages.select().where(messages.c.by == user.email.split('@')[0])
+    query = messages.select().where(messages.c.by == username)
     my_messages=await database.fetch_all(query)
     return templates.TemplateResponse("groupchat.html",{"request":request,"my_messages":my_messages,
     "messages_in_group":messages_in_group,"msg":msg,"username":username})
@@ -257,11 +235,11 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
     username=user.email.split('@')[0]
     form = await request.form()
     message = form.get("message")
-    query = messages.insert().values(message = message, by = user.email.split('@')[0],created_at = (datetime.now()).strftime("%H:%M"))
+    query = messages.insert().values(message = message, by = username,created_at = (datetime.now()).strftime("%I:%M%p"))
     await database.execute(query)
-    query = messages.select().where(messages.c.by != user.email.split('@')[0] )
+    query = messages.select().where(messages.c.by != username)
     messages_in_group=await database.fetch_all(query)
-    query = messages.select().where(messages.c.by == user.email.split('@')[0] )
+    query = messages.select().where(messages.c.by == username)
     my_messages=await database.fetch_all(query)
     return templates.TemplateResponse("groupchat.html",{"request":request,"my_messages":my_messages,
     "messages_in_group":messages_in_group,"username":username})
@@ -293,7 +271,7 @@ async def read_users(user: User = Depends(current_active_user)):
 
 @app.post("/create message for group", response_model=SeeMessage)
 async def create_message(message: AddMessage, user: User = Depends(current_active_user)):
-    query = messages.insert().values(message = message.message, by = user.email,created_at = (datetime.now()).strftime("%H:%M"))
+    query = messages.insert().values(message = message.message, by = user.email,created_at = (datetime.now()).strftime("%I:%M%p"))
     last_record_id = await database.execute(query)
     query = messages.select()
     created_text_for_group = await database.fetch_one(query)
