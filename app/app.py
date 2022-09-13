@@ -1,4 +1,3 @@
-from queue import Empty
 from fastapi import Depends, FastAPI, Request, Response
 from typing import List
 from app.db import User, create_db_and_tables, get_user_db,get_async_session
@@ -9,9 +8,9 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse , RedirectResponse
-import contextlib,re
+import contextlib
 from app.users import get_user_manager
-from datetime import datetime
+from datetime import datetime,date
 
 app = FastAPI()
 
@@ -30,18 +29,17 @@ app.mount("/static/", StaticFiles(directory="static"), name="static")
 async def on_startup():
     await create_db_and_tables()
 
-
-@app.get("/signup", include_in_schema=False)
-async def get(request:Request):
-    return templates.TemplateResponse("signup.html",{"request":request})
-
-
 async def create_user(email: str, password: str):
     async with get_async_session_context() as session:
         async with get_user_db_context(session) as user_db:
             async with get_user_manager_context(user_db) as user_manager:
                 user = await user_manager.create(UserCreate(email=email, password=password))
                 print(f"User created {user}")
+
+
+@app.get("/signup", include_in_schema=False)
+async def get(request:Request):
+    return templates.TemplateResponse("signup.html",{"request":request})
 
 
 @app.post("/signup", include_in_schema=False)
@@ -142,6 +140,13 @@ async def create_a_todo(request: Request,user: User = Depends(current_active_use
     return templates.TemplateResponse("creatatodo.html",{"request":request,"todos_in_db":todos_in_db,"msg":msg})
 
 
+@app.get("/seetodos", include_in_schema=False)
+async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
+    query = todos.select().where(todos.c.username == user.email)
+    todos_in_db=await database.fetch_all(query)
+    return templates.TemplateResponse("seetodos.html",{"request":request,"todos_in_db":todos_in_db,"msg":msg})
+
+
 @app.post("/seetodos", include_in_schema=False)
 async def get(request:Request,user: User = Depends(current_active_user)):
     form = await request.form()
@@ -149,13 +154,6 @@ async def get(request:Request,user: User = Depends(current_active_user)):
     query = todos.delete().where(todos.c.id == id and todos.c.username == user.email)
     del_todo=await database.execute(query)
     msg = "completed todo has been removed"
-    query = todos.select().where(todos.c.username == user.email)
-    todos_in_db=await database.fetch_all(query)
-    return templates.TemplateResponse("seetodos.html",{"request":request,"todos_in_db":todos_in_db,"msg":msg})
-    
-
-@app.get("/seetodos", include_in_schema=False)
-async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
     query = todos.select().where(todos.c.username == user.email)
     todos_in_db=await database.fetch_all(query)
     return templates.TemplateResponse("seetodos.html",{"request":request,"todos_in_db":todos_in_db,"msg":msg})
@@ -208,7 +206,8 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
     is_for = await database.fetch_all(query)
     for item in is_for:
         to=item.reciver
-    query = texts.insert().values(message = message ,to = to, by = username, created_at = (datetime.now()).strftime("%I:%M%p"))
+    query = texts.insert().values(message = message ,to = to, by = username, created_at = (datetime.now()).strftime("%I:%M%p"),
+    date = date.today().strftime("%m/%d/%y"))
     await database.execute(query)
     query = texts.select().where(texts.c.to == username, texts.c.by == to )
     text_in_private=await database.fetch_all(query)
@@ -235,7 +234,8 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
     username=user.email.split('@')[0]
     form = await request.form()
     message = form.get("message")
-    query = messages.insert().values(message = message, by = username,created_at = (datetime.now()).strftime("%I:%M%p"))
+    query = messages.insert().values(message = message, by = username,created_at = (datetime.now()).strftime("%I:%M%p"),
+    date = date.today().strftime("%m/%d/%y"))
     await database.execute(query)
     query = messages.select().where(messages.c.by != username)
     messages_in_group=await database.fetch_all(query)

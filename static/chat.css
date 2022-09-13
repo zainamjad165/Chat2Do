@@ -21,7 +21,7 @@ main{
 
 main header{
 	height:1px;
-	padding:30px 20px 30px 40px;
+	padding:10px 1px 50px 180px;
 }
 main header > *{
 	display:inline-block;
@@ -34,7 +34,7 @@ main header > *{
 	list-style-type:none;
 	overflow-y:scroll;
 	height:410px;
-	border-top:2px solid #fff;
+	border-top:10px solid #fff;
 	border-bottom:2px solid #fff;
 }
 #chat li{
