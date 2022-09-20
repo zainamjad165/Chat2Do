@@ -193,8 +193,10 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
     text_in_private=await database.fetch_all(query)
     query = texts.select().where(texts.c.to == to, texts.c.by == username )
     text_by_in_private=await database.fetch_all(query)
-    return templates.TemplateResponse("privatechat.html",{"request":request,"is_for":is_for,"text_in_private":text_in_private,
-    "text_by_in_private":text_by_in_private,"username":username,"msg":msg})
+    all_messages = text_in_private + text_by_in_private
+    asd = sorted(all_messages, key=lambda time: time[3])
+    zxc = sorted(asd, key=lambda date: date[4])
+    return templates.TemplateResponse("privatechat.html",{"request":request,"is_for":is_for,"zxc":zxc,"username":username,"msg":msg})
 
 
 @app.post("/privatechat", include_in_schema=False)
@@ -213,20 +215,20 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
     text_in_private=await database.fetch_all(query)
     query = texts.select().where(texts.c.to == to, texts.c.by == username )
     text_by_in_private=await database.fetch_all(query)
-    return templates.TemplateResponse("privatechat.html",{"request":request,"is_for":is_for,"text_in_private":text_in_private,
-    "text_by_in_private":text_by_in_private,"username":username})
-
+    all_messages = text_in_private + text_by_in_private
+    asd = sorted(all_messages, key=lambda time: time[3])
+    zxc = sorted(asd, key=lambda date: date[4])
+    return templates.TemplateResponse("privatechat.html",{"request":request,"is_for":is_for,"zxc":zxc,"username":username})
 
 
 @app.get("/groupchat", include_in_schema=False)
 async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
     username=user.email.split('@')[0]
-    query = messages.select().where(messages.c.by != username)
-    messages_in_group=await database.fetch_all(query)
-    query = messages.select().where(messages.c.by == username)
-    my_messages=await database.fetch_all(query)
-    return templates.TemplateResponse("groupchat.html",{"request":request,"my_messages":my_messages,
-    "messages_in_group":messages_in_group,"msg":msg,"username":username})
+    query = messages.select()
+    all_messages = await database.fetch_all(query)
+    asd = sorted(all_messages, key=lambda time: time[2])
+    zxc = sorted(asd, key=lambda date: date[3])
+    return templates.TemplateResponse("groupchat.html",{"request":request,"zxc":zxc,"msg":msg,"username":username})
 
 
 @app.post("/groupchat", include_in_schema=False)
@@ -237,12 +239,11 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
     query = messages.insert().values(message = message, by = username,created_at = (datetime.now()).strftime("%I:%M%p"),
     date = date.today().strftime("%m/%d/%y"))
     await database.execute(query)
-    query = messages.select().where(messages.c.by != username)
-    messages_in_group=await database.fetch_all(query)
-    query = messages.select().where(messages.c.by == username)
-    my_messages=await database.fetch_all(query)
-    return templates.TemplateResponse("groupchat.html",{"request":request,"my_messages":my_messages,
-    "messages_in_group":messages_in_group,"username":username})
+    query = messages.select()
+    all_messages = await database.fetch_all(query)
+    asd = sorted(all_messages, key=lambda time: time[2])
+    zxc = sorted(asd, key=lambda date: date[3])
+    return templates.TemplateResponse("groupchat.html",{"request":request,"zxc":zxc,"username":username})
 
 
 #FASTAPI DOCS

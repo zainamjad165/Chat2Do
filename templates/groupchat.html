@@ -20,36 +20,31 @@
 				</div>
 			</header>
 			<ul id="chat">
-				<li class="you">
-					{% for item in messages_in_group %}
-					<div class="entete">
-						<span class="status green"></span>
-						<h3>{{item.by}}</h3>
-					</div>
-					<div class="triangle"></div>
-					<div class="message">
-						{{item.message}}
-					</div>
-					<div class="entete">
-						<h3>{{item.created_at}}</h3>
-						<br>
-						<h3>{{item.date}}</h3>
-					</div>
-					{% endfor %}
-				</li>
-				<li class="me">
-					{% for item in my_messages %}
-					<div class="triangle"></div>
-					<div class="message">
-						{{item.message}}
-					</div>
-					<div class="entete">
-						<h3>{{item.created_at}}</h3>
-						<br>
-						<h3>{{item.date}}</h3>
-					</div>
-					{% endfor %}
-				</li>
+				{% for item in zxc %}
+				{% if item.by == username %}
+					<li class="me">
+						<div class="message">
+							{{item.message}}
+						</div>
+						<div class="entete">
+							<h3>{{item.created_at}}</h3>
+						</div>
+					</li>
+				{% endif %}
+				{% if item.by != username %}
+					<li class="you">
+						<div class="entete">
+							<h2>{{item.by}}</h2>
+						</div>
+						<div class="message">
+							{{item.message}}
+						</div>
+						<div class="entete">
+							<h3>{{item.created_at}}</h3>
+						</div>
+					</li>
+				{% endif %}
+				{% endfor %}
 			</ul>
 			<form method="POST">
 				<div class="mb-3">

@@ -20,32 +20,28 @@
 			</div>
 		</header>
 		<ul id="chat">
-			<li class="you">
-				{% for item in text_in_private %}
-					<div class="triangle"></div>
+			{% for item in zxc %}
+			{% if item.by == username %}
+				<li class="me">
 					<div class="message">
 						{{item.message}}
 					</div>
 					<div class="entete">
 						<h3>{{item.created_at}}</h3>
-						<br>
-						<h3>{{item.date}}</h3>
 					</div>
-				{% endfor %}
-			</li>
-			<li class="me">
-				{% for item in text_by_in_private %}
-					<div class="triangle"></div>
+				</li>
+			{% endif %}
+			{% if item.by != username %}
+				<li class="you">
 					<div class="message">
 						{{item.message}}
 					</div>
 					<div class="entete">
 						<h3>{{item.created_at}}</h3>
-						<br>
-						<h3>{{item.date}}</h3>
 					</div>
-				{% endfor %}
-			</li>
+				</li>
+			{% endif %}
+			{% endfor %}
 		</ul>
 		<form  method="POST">
 			<div class="mb-3">

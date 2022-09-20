@@ -38,18 +38,20 @@ main header > *{
 	border-bottom:2px solid #fff;
 }
 #chat li{
-	padding:10px 30px;
+	padding:1px 30px;
 }
-#chat h2,#chat h3{
+#chat h2{
 	display:inline-block;
-	font-size:13px;
+	font-size:16px;
+	font-weight:normal;
+}
+#chat h3{
+	display:inline-block;
+	font-size:10px;
 	font-weight:normal;
 }
 #chat h3{
 	color:#bbb;
-}
-#chat .entete{
-	margin-bottom:5px;
 }
 #chat .message{
 	padding:20px;
@@ -68,18 +70,4 @@ main header > *{
 }
 #chat .me .message{
 	background-color:#6fbced;
-}
-#chat .triangle{
-	width: 0;
-	height: 0;
-	border-style: solid;
-	border-width: 0 10px 10px 10px;
-}
-#chat .you .triangle{
-		border-color: transparent transparent #58b666 transparent;
-		margin-left:15px;
-}
-#chat .me .triangle{
-		border-color: transparent transparent #6fbced transparent;
-		margin-left:375px;
 }
