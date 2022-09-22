@@ -1,3 +1,60 @@
+<style>
+
+    body {
+  background-image: url("/static/bg\ for\ app.png");
+}
+    .signup-form{
+    width: 250px;
+    height: 380px;
+    position: absolute;
+    top: 250px;
+    left: 550px;
+    transform: translate(0%,-5%);
+    border-radius: 10px;
+    padding: 25px;
+}
+    
+.signup-form h1{
+    width: 200px;
+    font-family: sans-serif;
+    text-align: center;
+    color: white;
+    font-size: 22px;
+    background-color: blue;
+    border-radius: 10px;
+    margin: 2px;
+    padding: 8px;
+}
+
+.signup-form input{
+    width: 200px;
+    height: 35px;
+    background: transparent;
+    border-bottom: 1px solid #0800ff;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    color: rgb(255, 255, 255);
+    font-size: 15px;
+    letter-spacing: 1px;
+    margin-top: 30px;
+    font-family: sans-serif;
+}
+
+.signup-button{
+    width: 80px;
+    font-family: sans-serif;
+    text-align: center;
+    color: white;
+    font-size: 15px;
+    background-color: blue;
+    border-radius: 10px;
+    margin: 2px;
+    padding: 8px;
+    border: none;
+}
+</style>
+
 {% extends "base.html" %}
 {% block contant %}
     <div class="container text-center">
@@ -6,26 +63,25 @@
                 {{msg}}
             </div>
         {% endif %} 
-        <br>
-        <h1>Signup Here</h1>
-            {% for error in errors %}
-			    <div class="alert alert-danger" role="alert">
-					{{ error }}
-				</div>
-			{% endfor %}
+        {% for error in errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+        {% endfor %}
             <br>
-        <form  method="POST">
+        <form  method="POST" class="signup-form">
+            <h1>Signup Here</h1>
             <div class="mb-3">
-                <label for="email" class="form-label">Email address</label>
-                <input type="email" required class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter Your Email Here">
+                <!-- <label for="email" class="form-label">Email address</label> -->
+                <input type="email" required class="form-control" name="email" aria-describedby="emailHelp" placeholder="Email">
             </div>
             <br>
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" required class="form-control" name="password" placeholder="Enter Your Password Here">
+                <!-- <label for="password" class="form-label">Password</label> -->
+                <input type="password" required class="form-control" name="password" placeholder="Password">
             </div>
             <br>
-            <button type="submit" class="btn btn-primary">Registor</button>
+            <button type="submit" class="signup-button">Registor</button>
             <br>
             <p class="link">Already have an account<br>
             <a href="/">LOGIN</a> here</a></p>
