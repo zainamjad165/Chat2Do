@@ -1,13 +1,41 @@
+<style>
+    body {
+        background-image: url("/static/bg\ for\ app.png");
+}
+.but-yes {
+    width: 100px;
+    font-family: sans-serif;
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    background-color: blue;
+    border-radius: 10px;
+    margin: 30px;
+    padding: 8px;
+    border: none;
+}
+.but-no {
+    width: 100px;
+    font-family: sans-serif;
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    background-color: blue;
+    border-radius: 10px;
+    margin: 30px;
+    padding: 8px;
+    border: none;
+}
+</style>
+
 {% extends "base.html" %}
 
 {% block contant %}
     <div class="container text-center">
-        <br>
+        <br><br><br><br><br>
         <h3>Do you want to logout?</h3>
         <br>
-        <a class="btn btn-primary" href="/logout">YES</a>
-        <br>
-        <br>
-        <a class="btn btn-primary" href="/home">NO</a>
+        <a class="but-yes" href="/logout">YES</a>
+        <a class="but-no" href="/home">NO</a>
     </div>
 {% endblock %}
