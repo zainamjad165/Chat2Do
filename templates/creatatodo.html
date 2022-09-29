@@ -2,6 +2,50 @@
     body {
   background-image: url("/static/todo\ bg.png");
 }
+.form{
+        width: 250px;
+        height: 380px;
+        position: absolute;
+        top: 45%;
+        bottom: 50%;
+        left: 40%;
+        right: 50%;
+        transform: translate(0%,-5%);
+        border-radius: 10px;
+        padding: 25px;
+    }
+
+.form input{
+    width: 250px;
+    height: 35px;
+    background: white;
+    color: black;
+    font-size: 15px;
+    letter-spacing: 1px;
+    margin-top: 20px;
+    font-family: sans-serif;
+}
+.form textarea{
+    width: 250px;
+    height: 35px;
+    background: white;
+    color: black;
+    font-size: 15px;
+    letter-spacing: 1px;
+    font-family: sans-serif;
+}
+.button{
+    width: 80px;
+    font-family: sans-serif;
+    text-align: center;
+    color: white;
+    font-size: 15px;
+    background-color: purple;
+    border-radius: 10px;
+    margin: 2px;
+    padding: 8px;
+    border: none;
+}
 </style>
 
 {% extends "base.html" %}
@@ -14,18 +58,18 @@
                 {{msg}}
             </div>
         {% endif %}
-        <h3>Create Todo</h3>
-        <br>
-        <form  method="POST" id="form">
+        <h1>Create Todo</h1>
+        <form  method="POST" class="form">
             <div class="mb-3">
 		    	<input type="text" class="form-control" required name="tittle" placeholder="Enter tittle">
             </div>
             <br>
-            <div class="mb-3">
+            <div>
     			<textarea class="form-control" required name="description" placeholder="Enter todo description"></textarea>
-            </div>
+            </div class="mb-3">
             <br>
-            <button type="submit"  form="form" class="btn btn-primary">Create</button>
+            <button type="submit"  class="button">Create</button>
         </form>
     </div>
 {% endblock %}
+
