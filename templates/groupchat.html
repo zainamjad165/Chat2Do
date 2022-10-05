@@ -13,51 +13,49 @@
 
 {% block contant %}
 <div class="container text-center">
-	{% include 'navbar2.html' %}
+	{% include 'navbar.html' %}
 </div>
 <br>
-
-<body>
-	<div id="container">
-		<main>
-			<header>
-				<div>
-					<h2>GROUP CHAT</h2>
-				</div>
-			</header>
-			<ul id="chat">
-				{% for item in zxc %}
-				{% if item.by == username %}
-					<li class="me">
-						<div class="message">
-							{{item.message}}
-						</div>
-						<div class="entete">
-							<h3>{{item.created_at}}</h3>
-						</div>
-					</li>
-				{% endif %}
-				{% if item.by != username %}
-					<li class="you">
-						<div class="entete">
-							<h2>{{item.by}}</h2>
-						</div>
-						<div class="message">
-							{{item.message}}
-						</div>
-						<div class="entete">
-							<h3>{{item.created_at}}</h3>
-						</div>
-					</li>
-				{% endif %}
-				{% endfor %}
-			</ul>
-			<form method="POST">
-				<div class="mb-3">
-					<textarea class="form-control" required name="message" placeholder="Enter the text"></textarea>
-				</div>
-				<button type="submit" class="btn btn-primary">Send</button>
-			</form>
-		</main>
-	</div>
+<div id="container">
+	<main>
+		<header>
+			<div>
+				<h2>GROUP CHAT</h2>
+			</div>
+		</header>
+		<ul id="chat">
+			{% for item in zxc %}
+			{% if item.by == username %}
+				<li class="me">
+					<div class="message">
+						{{item.message}}
+					</div>
+					<div class="entete">
+						<h3>{{item.created_at}}</h3>
+					</div>
+				</li>
+			{% endif %}
+			{% if item.by != username %}
+				<li class="you">
+					<div class="entete">
+						<h2>{{item.by}}</h2>
+					</div>
+					<div class="message">
+						{{item.message}}
+					</div>
+					<div class="entete">
+						<h3>{{item.created_at}}</h3>
+					</div>
+				</li>
+			{% endif %}
+			{% endfor %}
+		</ul>
+		<form method="POST">
+			<div class="mb-3">
+				<textarea class="form-control" required name="message" placeholder="Enter the text"></textarea>
+			</div>
+			<button type="submit" class="btn btn-primary">Send</button>
+		</form>
+	</main>
+</div>
 {% endblock %}

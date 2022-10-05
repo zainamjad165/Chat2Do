@@ -3,12 +3,13 @@
 }
 #container{
 	width:500px;
-	height:600px;
+	height:620px;
 	background:transparent;
 	margin :0 auto;
 	font-size:0;
-	border-radius:px;
+	border-radius:22px;
 	overflow:hidden;
+	border:2px solid gray
 }
 
 main{
@@ -34,8 +35,8 @@ main header > *{
 	list-style-type:none;
 	overflow-y:scroll;
 	height:410px;
-	border-top:10px solid #fff;
-	border-bottom:2px solid #fff;
+	border-top:10px solid gray;
+	border-bottom:5px solid gray;
 }
 #chat li{
 	padding:1px 30px;
@@ -43,15 +44,15 @@ main header > *{
 #chat h2{
 	display:inline-block;
 	font-size:16px;
-	font-weight:normal;
+	font-weight:bold;
 }
 #chat h3{
 	display:inline-block;
 	font-size:10px;
-	font-weight:normal;
+	font-weight:bold;
 }
 #chat h3{
-	color:#bbb;
+	color:gray;
 }
 #chat .message{
 	padding:20px;
