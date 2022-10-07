@@ -3,13 +3,13 @@
 }
 #container{
 	width:500px;
-	height:620px;
+	height:520px;
 	background:transparent;
 	margin :0 auto;
 	font-size:0;
-	border-radius:22px;
+	border-radius:10px;
 	overflow:hidden;
-	border:2px solid gray
+	border:2px solid white;
 }
 
 main{
@@ -21,8 +21,9 @@ main{
 }
 
 main header{
+	color:white;
 	height:1px;
-	padding:10px 1px 50px 180px;
+	padding:10px 1px 50px 150px;
 }
 main header > *{
 	display:inline-block;
@@ -35,8 +36,8 @@ main header > *{
 	list-style-type:none;
 	overflow-y:scroll;
 	height:410px;
-	border-top:10px solid gray;
-	border-bottom:5px solid gray;
+	border-top:2px solid white;
+	border-bottom:2px solid white;
 }
 #chat li{
 	padding:1px 30px;
@@ -45,6 +46,7 @@ main header > *{
 	display:inline-block;
 	font-size:16px;
 	font-weight:bold;
+	color:white;
 }
 #chat h3{
 	display:inline-block;
@@ -67,8 +69,12 @@ main header > *{
 	text-align:right;
 }
 #chat .you .message{
-	background-color:#58b666;
+	font-weight:bold;
+	color:black;
+	background-color:white;
 }
 #chat .me .message{
-	background-color:#6fbced;
+	font-weight:bold;
+	color:black;
+	background-color:white;
 }

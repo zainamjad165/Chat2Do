@@ -1,25 +1,28 @@
 <style>
     body {
-  background-image: url("/static/chat\ background.jpg");
+        background-image: url("/static/chat\ wall.jpg");
+}
+.ChatRoom {
+    color: white;
 }
 </style>
 
 {% extends "base.html" %}
 
 {% block contant %}
+{% include 'navbar.html' %}
     <div class="container text-center">
-        {% include 'navbar.html' %}
         <br>
         <div class="icon">
-            <h2 class="logo">CHATROOM</h2>
+            <h2 class="ChatRoom">CHATROOM</h2>
         </div>
         <br>
         <div class="menu">
             <ul>
                 <br>
-                <a class="btn btn-primary" href="/groupchat">GROUP</a>
+                <a style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary" href="/groupchat">GROUP</a>
                 <br><br><br>
-                <a class="btn btn-primary" href="/users">PRIVATE</a>
+                <a style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary" href="/users">PRIVATE</a>
             </ul>
         </div>
     </div>

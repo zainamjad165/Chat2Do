@@ -1,30 +1,22 @@
 <style>
     body {
-  background-image: url("/static/bg\ for\ app.png");
+        background-image: url("/static/chat\ wall.jpg");
 }
 </style>
 
 {% extends "base.html" %}
 
 {% block contant %}
+{% include 'navbar.html' %}
 <div class="container text-center">
-    {% include 'navbar.html' %}
     <br>
-    {% if msg %}
-        <div class="alert alert-success" role="alert">
-            {{msg}}
-        </div>
-    {% endif %}
     <br>
-    <div class="menu">
-        <ul>
-            <br>
-            <a class="btn btn-primary" href="/todo">TODO</a>
-            <br>
-            <br>
-            <br>
-            <a class="btn btn-primary" href="/chat">CHAT</a>
-        </ul>
-    </div> 
+    <br>
+    <a style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;" class="btn btn-primary" href="/todo">TODO</a>
+    <br>
+    <br>
+    <br>
+    <a style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary" href="/chat">CHAT</a>
 </div>
 {% endblock %}
+

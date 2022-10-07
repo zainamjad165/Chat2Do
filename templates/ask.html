@@ -1,16 +1,14 @@
 <style>
     body {
-        background-image: url("/static/bg\ for\ app.png");
+        background-image: url("/static/chat\ wall.jpg");
 }
 .but-yes {
     width: 100px;
     font-family: sans-serif;
     text-align: center;
-    color: white;
     font-size: 20px;
-    background-color: blue;
     border-radius: 10px;
-    margin: 30px;
+    margin: 50px;
     padding: 8px;
     border: none;
 }
@@ -18,24 +16,30 @@
     width: 100px;
     font-family: sans-serif;
     text-align: center;
-    color: white;
     font-size: 20px;
-    background-color: blue;
     border-radius: 10px;
     margin: 30px;
     padding: 8px;
     border: none;
+}
+.question {
+    background-color: white;
+    width: 310px;
+    height: 120px;
+    margin-top: 5%;
+    margin-left: 38%;
+    border-radius: 5px;
+    border: 2px solid black;
 }
 </style>
 
 {% extends "base.html" %}
 
 {% block contant %}
-    <div class="container text-center">
-        <br><br><br><br><br>
+    <div class="question">
         <h3>Do you want to logout?</h3>
         <br>
-        <a class="but-yes" href="/logout">YES</a>
-        <a class="but-no" href="/home">NO</a>
+        <a style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary" href="/logout">YES</a>
+        <a style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary" href="/home">NO</a>
     </div>
 {% endblock %}

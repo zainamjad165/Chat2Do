@@ -1,6 +1,20 @@
 <style>
     body {
-  background-image: url("/static/chat\ background.jpg");
+		background-image: url("/static/chat\ wall.jpg");
+}
+.form textarea {
+	border: 2px solid black;
+	border-radius: 0px;
+	width: 400px;
+	height: 45px;
+}
+.form button {
+	background-color: white;
+	font-weight: bold;
+	color: black;
+	border: 2px solid black;
+	margin-top: -60px;
+	margin-left: 420px;
 }
 </style>
 
@@ -12,8 +26,9 @@
 {% endblock %}
 
 {% block contant %}
+{% include 'navbar.html' %}
+
 <div class="container text-center">
-	{% include 'navbar.html' %}
 </div>
 <br>
 <div id="container">
@@ -50,7 +65,7 @@
 			{% endif %}
 			{% endfor %}
 		</ul>
-		<form method="POST">
+		<form method="POST" class="form">
 			<div class="mb-3">
 				<textarea class="form-control" required name="message" placeholder="Enter the text"></textarea>
 			</div>

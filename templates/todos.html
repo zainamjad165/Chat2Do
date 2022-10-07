@@ -1,27 +1,29 @@
 <style>
     body {
-  background-image: url("/static/todo\ bg.png");
+  background-image: url("/static/todo\ bg.png");        background-image: url("/static/chat\ wall.jpg");
+
+}
+.todo {
+    color: white;
 }
 </style>
 
 {% extends "base.html" %}
 
 {% block contant %}
+{% include 'navbar.html' %}
     <div class="container text-center">
-        {% include 'navbar.html' %}
         <br>
         <div class="icon">
-            <h2 class="logo">TODO</h2>
+            <h2 class="todo">TODO</h2>
         </div>
         <br>
         <div class="menu">
             <ul>
                 <br>
-                <a class="btn btn-primary" href="/creatatodo">Create</a>
-                <br>
-                <br>
-                <br>
-                <a class="btn btn-primary" href="/seetodos">List</a>
+                <a style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary" href="/creatatodo">Create</a>
+                <br><br><br>
+                <a style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary" href="/seetodos">List</a>
             </ul>
         </div>
     </div>

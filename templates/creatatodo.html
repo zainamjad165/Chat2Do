@@ -1,22 +1,18 @@
 <style>
     body {
-  background-image: url("/static/todo\ bg.png");
+        background-image: url("/static/chat\ wall.jpg");
 }
 .form{
         width: 250px;
         height: 380px;
-        position: absolute;
-        top: 45%;
-        bottom: 50%;
-        left: 40%;
-        right: 50%;
+        margin-left: 28%;
         transform: translate(0%,-5%);
         border-radius: 10px;
         padding: 25px;
     }
 
 .form input{
-    width: 250px;
+    width: 450px;
     height: 35px;
     background: white;
     color: black;
@@ -26,7 +22,7 @@
     font-family: sans-serif;
 }
 .form textarea{
-    width: 250px;
+    width: 450px;
     height: 35px;
     background: white;
     color: black;
@@ -34,31 +30,19 @@
     letter-spacing: 1px;
     font-family: sans-serif;
 }
-.button{
-    width: 80px;
-    font-family: sans-serif;
-    text-align: center;
-    color: white;
-    font-size: 15px;
-    background-color: blue;
-    border-radius: 10px;
-    margin: 2px;
-    padding: 8px;
-    border: none;
-}
 </style>
 
 {% extends "base.html" %}
 {% block contant %}
+{% include 'navbar.html' %}
     <div class="container text-center">
-        {% include 'navbar.html' %}
         <br>
         {% if msg %}
             <div class="alert alert-success" role="alert">
                 {{msg}}
             </div>
         {% endif %}
-        <h1>Create Todo</h1>
+        <h1 style="color:white;">Create Todo</h1>
         <form  method="POST" class="form">
             <div class="mb-3">
 		    	<input type="text" class="form-control" required name="tittle" placeholder="Enter tittle">
@@ -68,7 +52,7 @@
     			<textarea class="form-control" required name="description" placeholder="Enter todo description"></textarea>
             </div class="mb-3">
             <br>
-            <button type="submit"  class="button">Create</button>
+            <button type="submit"  style="margin-left: 60%;border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary">Create</button>
         </form>
     </div>
 {% endblock %}

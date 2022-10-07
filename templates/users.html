@@ -1,16 +1,21 @@
 <style>
     body {
-  background-image: url("/static/chat\ background.jpg");
+        background-image: url("/static/chat\ wall.jpg");
+}
+.user {
+    color: white;
 }
 </style>
 
 {% extends "base.html" %}
 
 {% block contant %}
+{% include 'navbar.html' %}
+
     <div class="container text-center">
-        {% include 'navbar.html' %}
+        <br>
         <div class="icon">
-            <h2 class="logo">Users</h2>
+            <h2 class="user">Users</h2>
             <br>
         </div>
         <div class="menu">
@@ -20,8 +25,9 @@
                     <div class="mb-3">
                         <input type="hidden" required name="username" value="{{item.username}}" >
                     </div>
-                    <button type="submit" class="btn btn-primary">{{item.username}}</button>
+                    <button type="submit" style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary">{{item.username}}</button>
                 </form>
+                <br>
                 {% endfor %}
             </ul>
         </div>

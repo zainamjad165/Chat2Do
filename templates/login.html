@@ -1,59 +1,41 @@
 <style>
     body {
-  background-image: url("/static/bg\ for\ app.png");
+        background-image: url("/static/chat\ wall.jpg");
 }
 
     .login-form{
         width: 250px;
-        height: 380px;
-        position: absolute;
-        top: 25%;
-        bottom: 50%;
-        left: 40%;
-        right: 50%;
-        transform: translate(0%,-5%);
+        height: 400px;
+        margin-top: 30px;
+        margin-left: 39%;
         border-radius: 10px;
         padding: 25px;
+        border: 2px solid black;
+        background-color: white;
     }
     
 .login-form h1{
     width: 200px;
     font-family: sans-serif;
     text-align: center;
-    color: white;
-    font-size: 22px;
-    background-color: blue;
+    color: black;
+    font-size: 30px;
     border-radius: 10px;
     margin: 2px;
     padding: 8px;
+    border-bottom: 1px solid black;
 }
 
 .login-form input{
     width: 200px;
     height: 35px;
     background: transparent;
-    border-bottom: 1px solid #0800ff;
-    border-top: none;
-    border-right: none;
-    border-left: none;
+    border-bottom: 1px solid black;
     color: rgb(255, 255, 255);
     font-size: 15px;
     letter-spacing: 1px;
-    margin-top: 30px;
+    margin-top: 50px;
     font-family: sans-serif;
-}
-
-.login-button{
-    width: 80px;
-    font-family: sans-serif;
-    text-align: center;
-    color: white;
-    font-size: 15px;
-    background-color: blue;
-    border-radius: 10px;
-    margin: 2px;
-    padding: 8px;
-    border: none;
 }
 </style>
 
@@ -75,13 +57,10 @@
         <h1>Login Here</h1>
         <div class="mb-3">
             <input type="email" required class="form-control" name="username" aria-describedby="emailHelp" placeholder="Email">
-        </div>
-        <br>
-        <div class="mb-3">
             <input type="password" required class="form-control" name="password" placeholder="Password ">
         </div>
         <br>
-        <button type="submit" class="login-button">LOGIN</button>
+        <button type="submit" style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary">LOGIN</button>
         <br>
         <p class="link">Don't have an account<br>
         <a href="/signup">SIGNUP</a> here</a></p>
