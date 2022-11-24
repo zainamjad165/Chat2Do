@@ -5,25 +5,99 @@
 .ChatRoom {
     color: white;
 }
+#Users{
+    background-color: white;
+    margin : 0;
+    margin-bottom: 50px;
+    margin-right: -29px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;  
+}
+textarea.form-control {
+    min-height: calc(1.5em + 0.75rem + 2px);
+    border-radius: 0px;
+}
+.form textarea {
+	border-radius: 0px;
+	width: 400px;
+	height: 46px;
+}
+
 </style>
 
 {% extends "base.html" %}
+
+{% block title %}
+<link rel="stylesheet" href="/static/chat.css">
+{% endblock %}
 
 {% block contant %}
 {% include 'navbar.html' %}
     <div class="container text-center">
         <br>
         <div class="icon">
-            <h2 class="ChatRoom">CHATROOM</h2>
+            <h2 class="ChatRoom">CHAT</h2>
         </div>
         <br>
-        <div class="menu">
-            <ul>
-                <br>
-                <a style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary" href="/groupchat">GROUP</a>
-                <br><br><br>
-                <a style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary" href="/users">PRIVATE</a>
-            </ul>
+        <div class="container-fluid">
+            <div class="row justify-content-center" id="banner">
+                <div class="col-md-2 " id="Users">
+                    <h4 style="margin-top: 25px; margin-bottom: 30px;">USERS</h4>
+                    {% for item in users_in_db %}
+                    <form method="POST">
+                        <div class="mb-3">
+                            <input type="hidden" required name="username" value="{{item.username}}" >
+                        </div>
+                        <button type="submit" style="border:2px solid black;background-color: white;text-align: center;color: black;font-weight: bold;font-size: medium;"class="btn btn-primary">{{item.username}}</button>
+                    </form>
+                    {% endfor %}
+                    <a style="border:2px solid black;background-color: white;text-align: center;color: black;font-weight: bold;font-size: medium;"class="btn btn-primary" href="/groupchat">GROUP</a>
+                </div>
+                <div class="col-md-6 " >
+                <div id="container">
+                    <main>
+                        <header>
+                            <div>
+                                {% for item in is_for %}
+                                    <h2 style="position: relative;left:-90px">{{item.reciver}}</h2>
+                                {% endfor %}
+                            </div>
+                        </header>
+                        <ul id="chat">
+                            {% for item in zxc %}
+                            {% if item.by == username %}
+                                <li class="me">
+                                    <div class="message">
+                                        {{item.message}}
+                                    </div>
+                                    <div class="entete">
+                                        <h3>{{item.created_at}}</h3>
+                                    </div>
+                                </li>
+                            {% endif %}
+                            {% if item.by != username %}
+                                <li class="you">
+                                    <div class="message">
+                                        {{item.message}}
+                                    </div>
+                                    <div class="entete">
+                                        <h3>{{item.created_at}}</h3>
+                                    </div>
+                                </li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                        <form  method="POST" class="form">
+                            <div class="mb-3">
+                                <input type="hidden" required name="to" value="{{to}}">
+                                <textarea class="form-control" required name="message" placeholder="Enter the text"></textarea>
+                            </div>
+                            <button style="background-color: white;font-weight: bold;color: black;border: 2px solid black;margin-top: -60px;margin-left: 400px;"type="submit" class="btn btn-primary">Send</button>
+                        </form>
+                    </main>
+                </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

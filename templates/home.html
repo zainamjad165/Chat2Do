@@ -2,21 +2,76 @@
     body {
         background-image: url("/static/chat\ wall.jpg");
 }
+#Todo{
+    background-color: white;
+    margin-right: 100px;
+    margin-top: 70px;
+    border-radius: 20px;
+}
+#Todo h3{
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 25px;
+    margin-top: 20px;
+    border-bottom: 2px solid black;
+    border-radius: 10px;
+}
+#Todo li{
+    font-size: large;
+    font-weight: bold;
+    position: relative;
+    left: 25px;
+}
+#Todo ul{
+    position: relative;
+    left: 25px;
+}
+#New{
+    background-color: white;
+    margin-top: 70px;
+    border-radius: 20px;
+}
+#New h3{
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 25px;
+    margin-top: 20px;
+    border-bottom: 2px solid black;
+    border-radius: 10px;
+}
+#New li{
+    font-size: large;
+    font-weight: bold;
+    position: relative;
+    left: 25px;
+}
+#New ul{
+    position: relative;
+    left: 25px;
+}
 </style>
 
 {% extends "base.html" %}
 
 {% block contant %}
 {% include 'navbar.html' %}
-<div class="container text-center">
-    <br>
-    <br>
-    <br>
-    <a style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;" class="btn btn-primary" href="/todo">TODO</a>
-    <br>
-    <br>
-    <br>
-    <a style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary" href="/chat">CHAT</a>
+<div class="container-fluid">
+    <div class="row justify-content-center" id="banner">
+        <div class="col-md-4 " id="Todo">
+            <h3>TODO</h3>
+            {% for item in todos_in_db %}
+            <li>{{item.tittle}}</li>
+            <ul>{{item.description}}</ul>
+            {% endfor %}
+        </div>
+        <div class="col-md-4 " id="New">
+            <h3>New Messages</h3>
+            {% for item in text_in_private %}
+            <li>{{item.by}}</li>
+            <ul>{{item.message}}</ul>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock %}
 

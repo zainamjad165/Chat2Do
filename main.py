@@ -22,6 +22,14 @@ reciver = sqlalchemy.Table(
     sqlalchemy.Column("reciver", sqlalchemy.String) 
 )
 
+group = sqlalchemy.Table(
+    "group",
+    metadata,
+    sqlalchemy.Column("username", sqlalchemy.String) ,
+    sqlalchemy.Column("groupname", sqlalchemy.String),
+    sqlalchemy.Column("admin", sqlalchemy.String)  
+)
+
 todos = sqlalchemy.Table(
     "todos",
     metadata,

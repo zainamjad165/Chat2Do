@@ -6,6 +6,45 @@
 .todo {
     color: white;
 }
+#List{
+    background-color: white;
+    margin-right: 100px;
+    margin-top: 40px;
+    margin-bottom: 50px;
+    border-radius: 20px;
+}
+#List h3{
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 25px;
+    margin-top: 20px;
+    border-bottom: 2px solid black;
+    border-radius: 10px;
+}
+#List li{
+    font-size: large;
+    font-weight: bold;
+    position: relative;
+    left: 25px;
+}
+#List ul{
+    position: relative;
+    left: 25px;
+}
+#Creat{
+    background-color: transparent;
+    margin-top: 40px;
+    margin-bottom: 50px;
+    border-radius: 20px;
+}
+#Creat h1{
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 25px;
+    margin-top: 20px;
+    border-radius: 10px;
+    color: white;
+}
 </style>
 
 {% extends "base.html" %}
@@ -18,13 +57,53 @@
             <h2 class="todo">TODO</h2>
         </div>
         <br>
-        <div class="menu">
-            <ul>
-                <br>
-                <a style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary" href="/creatatodo">Create</a>
-                <br><br><br>
-                <a style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary" href="/seetodos">List</a>
-            </ul>
+        <div class="container-fluid">
+            <div class="row justify-content-center" id="banner">
+                <div class="col-md-5 " id="List">
+                    <h3>Todo</h3>
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Tittle</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in todos_in_db %}
+                            <tr>
+                                <th scope="row">{{ item.id }}</th>
+                                <td>{{item.tittle}}</td>
+                                <td>{{item.description}}</td>
+                                <td>
+                                  <form  id="list" method="Post">
+                                    <div class="mb-3">
+                                      <input type="hidden" required name="id" value="{{ item.id }}" >
+                                    </div>
+                                    <button type="submit" style="border:2px solid black;background-color: white;border-radius: 2px;width: 100px;text-align: center;color: black;font-weight: bold;font-size: small;"class="btn btn-primary">Completed</button>
+                                  </form>
+                                </td>
+                            </tr>   
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-4 " id="Creat">
+                    <h1>Creat Todo </h1>
+                    <form  id="creat" method="POST" >
+                        <div class="mb-3">
+                            <input type="text" class="form-control" required name="tittle" placeholder="Enter tittle">
+                        </div>
+                        <br>
+                        <div>
+                            <textarea class="form-control" required name="description" placeholder="Enter todo description"></textarea>
+                        </div class="mb-3">
+                        <br>
+                        <button type="submit"  style="margin-left: 60%;border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary">Create</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

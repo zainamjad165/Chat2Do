@@ -6,10 +6,13 @@
 	height:520px;
 	background:transparent;
 	margin :0 auto;
+	margin-bottom: 50px;
 	font-size:0;
-	border-radius:10px;
+	border-top-right-radius:10px;
+	border-bottom-right-radius:10px;
 	overflow:hidden;
 	border:2px solid white;
+	padding-left: 0px;
 }
 
 main{
@@ -44,6 +47,8 @@ main header > *{
 }
 #chat h2{
 	display:inline-block;
+	position: relative;
+	left:10px;
 	font-size:16px;
 	font-weight:bold;
 	color:white;
@@ -63,18 +68,23 @@ main header > *{
 	max-width:90%;
 	display:inline-block;
 	text-align:left;
-	border-radius:5px;
 }
 #chat .me{
 	text-align:right;
+}
+#chat .you{
+	text-align:left;
 }
 #chat .you .message{
 	font-weight:bold;
 	color:black;
 	background-color:white;
+	border-radius:10px;
+
 }
 #chat .me .message{
 	font-weight:bold;
 	color:black;
 	background-color:white;
+	border-radius:10px;
 }
