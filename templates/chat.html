@@ -7,20 +7,35 @@
 }
 #Users{
     background-color: white;
-    margin : 0;
     margin-bottom: 50px;
     margin-right: -29px;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;  
 }
+
 textarea.form-control {
     min-height: calc(1.5em + 0.75rem + 2px);
     border-radius: 0px;
 }
-.form textarea {
+.textform textarea {
 	border-radius: 0px;
 	width: 400px;
 	height: 46px;
+}
+@media only screen and (max-width: 390px) {
+    #Users {
+        position: absolute;
+        left: 0;
+        width: 110px;
+        height: 500px;
+    }
+    .textform textarea {
+	width: 210px;
+    }
+    .textform button {
+        position: absolute;
+        right: 0;
+    }
 }
 
 </style>
@@ -57,7 +72,7 @@ textarea.form-control {
                 <div id="container">
                     <main>
                         <header>
-                            <div>
+                            <div >
                                 {% for item in is_for %}
                                     <h2 style="position: relative;left:-90px">{{item.reciver}}</h2>
                                 {% endfor %}
@@ -87,12 +102,12 @@ textarea.form-control {
                             {% endif %}
                             {% endfor %}
                         </ul>
-                        <form  method="POST" class="form">
+                        <form  method="POST" class="textform">
                             <div class="mb-3">
                                 <input type="hidden" required name="to" value="{{to}}">
                                 <textarea class="form-control" required name="message" placeholder="Enter the text"></textarea>
                             </div>
-                            <button style="background-color: white;font-weight: bold;color: black;border: 2px solid black;margin-top: -60px;margin-left: 400px;"type="submit" class="btn btn-primary">Send</button>
+                            <button style="background-color: white;font-weight: bold;color: black;border: 2px solid black;margin-top: -55px;margin-left: 400px;border-radius: 5px;" type="btn btn-primary" class="sbt">Send</button>
                         </form>
                     </main>
                 </div>

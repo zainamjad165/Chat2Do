@@ -1,9 +1,8 @@
 from fastapi import Depends, FastAPI, Request, Response
-from typing import List
 from app.db import User, create_db_and_tables, get_user_db,get_async_session
 from app.schemas import UserCreate, UserRead
 from app.users import auth_backend, current_active_user, fastapi_users, get_jwt_strategy
-from main import users,todos,texts,messages,reciver,database,group,AddMessage,SeeMessage,AddText,AddTodo,SeeText,SeeTodo,SeeUser
+from main import users,todos,texts,messages,reciver,database,group,groupuser
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -158,7 +157,7 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
     all_messages = text_in_private + text_by_in_private
     asd = sorted(all_messages, key=lambda time: time[3])
     zxc = sorted(asd, key=lambda date: date[4])
-    return templates.TemplateResponse("chat.html",{"request":request,"is_for":is_for,"zxc":zxc,"username":username,"msg":msg,"users_in_db":users_in_db,})
+    return templates.TemplateResponse("chat.html",{"request":request,"is_for":is_for,"zxc":zxc,"username":username,"msg":msg,"users_in_db":users_in_db})
 
 @app.post("/chat", include_in_schema=False)
 async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
@@ -223,3 +222,39 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
     asd = sorted(all_messages, key=lambda time: time[2])
     zxc = sorted(asd, key=lambda date: date[3])
     return templates.TemplateResponse("groupchat.html",{"request":request,"zxc":zxc,"username":username})
+
+
+@app.get("/group", include_in_schema=False)
+async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
+    username=user.email.split('@')[0]
+    query = group.select().where(group.c.admin == username)
+    mygroups = await database.fetch_all(query)
+    return templates.TemplateResponse("group.html",{"request":request,"username":username,"mygroups":mygroups})
+
+@app.post("/group", include_in_schema=False)
+async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
+    username=user.email.split('@')[0]
+    form = await request.form()
+    groupname = form.get("groupname")
+    query = group.insert().values(groupname = groupname, admin = username)
+    await database.execute(query)
+    return templates.TemplateResponse("groupuser.html",{"request":request,"username":username,"groupname":groupname})
+
+@app.get("/groupuser", include_in_schema=False)
+async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
+    username=user.email.split('@')[0]
+    query = users.select().where(users.c.username != username)
+    users_in_db=await database.fetch_all(query)
+    return templates.TemplateResponse("groupuser.html",{"request":request,"username":username,"users_in_db":users_in_db})
+
+@app.post("/groupuser", include_in_schema=False)
+async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
+    username=user.email.split('@')[0]
+    form = await request.form()
+    member = form.get("member")
+    groupname = form.get("groupname")
+    query = groupuser.insert.values(groupname = groupname , username = member)
+    await database.execute(query)
+    query = users.select().where(users.c.username != username)
+    users_in_db=await database.fetch_all(query)
+    return templates.TemplateResponse("groupuser.html",{"request":request,"username":username,"users_in_db":users_in_db})

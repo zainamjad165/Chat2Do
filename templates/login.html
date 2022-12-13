@@ -3,16 +3,16 @@
         background-image: url("/static/chat\ wall.jpg");
 }
 
-    .login-form{
-        width: 250px;
-        height: 400px;
-        margin-top: 30px;
-        margin-left: 39%;
-        border-radius: 10px;
-        padding: 25px;
-        border: 2px solid black;
-        background-color: white;
-    }
+.login-form{
+    width: 250px;
+    height: 400px;
+    margin-top: 30px;
+    margin-left: 39%;
+    border-radius: 10px;
+    padding: 25px;
+    border: 2px solid black;
+    background-color: white;
+}
     
 .login-form h1{
     width: 200px;
@@ -37,6 +37,14 @@
     margin-top: 50px;
     font-family: sans-serif;
 }
+@media screen and (max-width: 390px)
+{
+    .login-form{
+        margin-top: 100px;
+        margin-left: 15%;
+    }
+}
+ 
 </style>
 
 {% extends "base.html" %}

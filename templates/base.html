@@ -15,11 +15,23 @@
         background-color: white;
         border-radius: 30px;
     }
+@media only screen and (max-width: 390px) {
+    .logo {
+        margin-top: 50px;
+        margin-left: 22%;
+    }
+    .appinfo {
+        margin-top: 35px;
+        margin-left: 0px;
+        width:fit-content;
+    }
+}
 </style>
 
 <!DOCTYPE html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" >
     {% block title %}
     {% endblock %}
@@ -29,7 +41,7 @@
 <body>
     <div class="container text-center">
         <h1 class="logo">Chat2Do</h1>
-        <p class="appinfo" >Check Out Your Todos And Join The ChatRoom</p>
+        <p  class="appinfo" >Check Out Your Todos And Join The ChatRoom</p>
     </div>
     {% block contant %}
     {% endblock %}
