@@ -20,7 +20,7 @@
     border-bottom: 2px solid black;
     border-radius: 10px;
 }
-#List li{
+/* #List li{
     font-size: large;
     font-weight: bold;
     position: relative;
@@ -29,7 +29,7 @@
 #List ul{
     position: relative;
     left: 25px;
-}
+} */
 #Creat{
     background-color: transparent;
     margin-top: 40px;
@@ -52,11 +52,6 @@
 {% block contant %}
 {% include 'navbar.html' %}
     <div class="container text-center">
-        <br>
-        <div class="icon">
-            <h2 class="todo">TODO</h2>
-        </div>
-        <br>
         <div class="container-fluid">
             <div class="row justify-content-center" id="banner">
                 <div class="col-md-5 " id="List">
@@ -73,17 +68,19 @@
                         <tbody>
                             {% for item in todos_in_db %}
                             <tr>
-                                <th scope="row">{{ item.id }}</th>
-                                <td>{{item.tittle}}</td>
-                                <td>{{item.description}}</td>
-                                <td>
-                                  <form  id="list" method="Post">
+                                <th scope="row" style="vertical-align: middle;">{{ item.id }}</th>
+                                <td style="vertical-align:middle;">{{item.tittle}}</td>
+                                <td style="vertical-align:middle;">{{item.description}}</td>
+                                <form  id="list" method="Post">
                                     <div class="mb-3">
-                                      <input type="hidden" required name="id" value="{{ item.id }}" >
+                                        <input type="hidden" required name="id" value="{{ item.id }}" >
                                     </div>
-                                    <button type="submit" style="border:2px solid black;background-color: white;border-radius: 2px;width: 100px;text-align: center;color: black;font-weight: bold;font-size: small;"class="btn btn-primary">Completed</button>
-                                  </form>
-                                </td>
+                                    <td style="vertical-align:middle;">
+                                        <button type="submit" style="border:0px;background-color: white;text-align: center;color: black;font-weight: bold;font-size: small;"class="btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+                                          </svg></button>
+                                    </td>
+                                </form>
                             </tr>   
                             {% endfor %}
                         </tbody>

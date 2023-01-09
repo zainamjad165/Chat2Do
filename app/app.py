@@ -2,7 +2,7 @@ from fastapi import Depends, FastAPI, Request, Response
 from app.db import User, create_db_and_tables, get_user_db,get_async_session
 from app.schemas import UserCreate, UserRead
 from app.users import auth_backend, current_active_user, fastapi_users, get_jwt_strategy
-from main import users,todos,texts,messages,reciver,database,group,groupuser
+from main import users,todos,texts,messages,reciver,database,group,groupuser,member
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -236,25 +236,75 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
     username=user.email.split('@')[0]
     form = await request.form()
     groupname = form.get("groupname")
-    query = group.insert().values(groupname = groupname, admin = username)
-    await database.execute(query)
-    return templates.TemplateResponse("groupuser.html",{"request":request,"username":username,"groupname":groupname})
+    errors = []
+    query = group.select().where(group.c.admin == username)
+    mygroups = await database.fetch_all(query)
+    taken = [tup[0] for tup in mygroups]
+    if groupname in taken:
+        errors.append("Groupname is taken")
+        return templates.TemplateResponse("group.html",{"request":request,"username":username,"mygroups":mygroups,"errors":errors}) 
+    else:
+        query = group.insert().values(groupname = groupname, admin = username)
+        await database.execute(query)
+        return RedirectResponse(url=f"/group", status_code=303)
+
+
+@app.get("/managegroups", include_in_schema=False)
+async def get(request:Request,user: User = Depends(current_active_user)):
+    username=user.email.split('@')[0]
+    query = group.select().where(group.c.admin == username)
+    mygroups=await database.fetch_all(query)
+    return templates.TemplateResponse("managegroups.html",{"request":request,"mygroups":mygroups,"username":username})
+
+
+@app.post("/managegroups", include_in_schema=False)
+async def get(request:Request,user: User = Depends(current_active_user)):
+    form = await request.form()
+    id = form.get("id")
+    groupname = form.get("adduserin")
+    if id:
+        query = group.delete().where(group.c.groupname == id)
+        await database.execute(query)
+        query = groupuser.delete().where(groupuser.c.groupname == id)
+        await database.execute(query)
+        return RedirectResponse(url=f"managegroups", status_code=303)
+    elif groupname:
+        query = member.update().values(member = groupname)
+        await database.execute(query)
+        return RedirectResponse(url=f"groupuser", status_code=303)
+    
 
 @app.get("/groupuser", include_in_schema=False)
 async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
     username=user.email.split('@')[0]
-    query = users.select().where(users.c.username != username)
+    query = member.select()
+    is_of = await database.fetch_all(query)
+    query = users.select().where(users.c.username != username )
     users_in_db=await database.fetch_all(query)
-    return templates.TemplateResponse("groupuser.html",{"request":request,"username":username,"users_in_db":users_in_db})
+    return templates.TemplateResponse("groupuser.html",{"request":request,"username":username,"users_in_db":users_in_db,"is_of":is_of})
 
 @app.post("/groupuser", include_in_schema=False)
 async def get(request:Request,msg: str = None,user: User = Depends(current_active_user)):
-    username=user.email.split('@')[0]
     form = await request.form()
-    member = form.get("member")
-    groupname = form.get("groupname")
-    query = groupuser.insert.values(groupname = groupname , username = member)
-    await database.execute(query)
-    query = users.select().where(users.c.username != username)
-    users_in_db=await database.fetch_all(query)
-    return templates.TemplateResponse("groupuser.html",{"request":request,"username":username,"users_in_db":users_in_db})
+    username = form.get("username")
+    errors = []
+    query = member.select()
+    is_of = await database.fetch_all(query)
+    for item in is_of:
+        groupname=item.member
+    query = groupuser.select().where(groupuser.c.groupname == groupname)
+    userin = await database.fetch_all(query)
+    userisin= [tup[-1] for tup in userin] 
+    if username in userisin:
+        errors.append("this user is allredy a member")
+        query = member.select()
+        is_of = await database.fetch_all(query)
+        query = users.select().where(users.c.username != username )
+        users_in_db=await database.fetch_all(query)
+        return templates.TemplateResponse("groupuser.html",{"request":request,"username":username,"users_in_db":users_in_db,"is_of":is_of,"errors":errors})
+    else:
+        query = groupuser.insert().values(groupname = groupname, username = username)
+        await database.execute(query)
+        return RedirectResponse(url=f"managegroups", status_code=303)
+
+

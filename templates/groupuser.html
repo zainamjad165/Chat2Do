@@ -7,14 +7,20 @@
 
 {% block contant %}
 <div class="container text-center">
-    <h1>Add User in {{groupname}}</h1>
+    {% for item in is_of %}
+        <h1 style="color:white;">Add User in {{item.member}}</h1>
+    {% endfor %}
+    {% for error in errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+    {% endfor %}
     <form method="POST">
         <div class="mb-3">
             {% for item in users_in_db %}
             <form method="POST">
                 <div class="mb-3">
-                    <input type="hidden" required name="groupname" value="{{groupname}}" >
-                    <input type="hidden" required name="member" value="{{item.username}}" >
+                    <input type="hidden" required name="username" value="{{item.username}}" >
                 </div>
                 <button type="submit" style="border:2px solid black;background-color: white;text-align: center;color: black;font-weight: bold;font-size: medium;"class="btn btn-primary">{{item.username}}</button>
             </form>
