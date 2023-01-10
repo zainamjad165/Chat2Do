@@ -8,9 +8,14 @@
 #Users{
     background-color: white;
     margin-bottom: 50px;
-    margin-right: -29px;
+    margin-right: -3%;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;  
+    overflow-y:scroll;
+    height:520px;
+    padding-right: 0px;
+    padding-left: 0px;
+
 }
 
 textarea.form-control {
@@ -19,14 +24,15 @@ textarea.form-control {
 }
 .textform textarea {
 	border-radius: 0px;
-	width: 400px;
+	width: 440px;
 	height: 46px;
 }
-@media only screen and (max-width: 390px) {
+
+@media only screen and (max-width: 765px) {
     #Users {
         position: absolute;
         left: 0;
-        width: 110px;
+        width: 160px;
         height: 500px;
     }
     .textform textarea {
@@ -36,6 +42,18 @@ textarea.form-control {
         position: absolute;
         right: 0;
     }
+}
+@media only screen and (max-width: 375px) {
+    #Users {
+        width: 102px;
+    }
+    
+}
+@media only screen and (max-width: 390px) {
+    #Users {
+        width: 110px;
+    }
+    
 }
 
 </style>
@@ -57,39 +75,22 @@ textarea.form-control {
         <div class="container-fluid">
             <div class="row justify-content-center" id="banner">
                 <div class="col-md-2 " id="Users">
-                    <h4 style="margin-top: 25px; margin-bottom: 30px;">USERS</h4>
-                    <table class="table">
-                        <thead>
-                          <tr>
-                            <th scope="col"></th>
-                          </tr>
-                        </thead>
+                    <table class="table table-striped">
                         <tbody>
                             {% for item in users_in_db %}
                             <tr>
-                                <form method="Post">
+                                <form method="POST" class="but">
                                     <div class="mb-3">
                                         <input type="hidden" required name="username" value="{{item.username}}" >
                                     </div>
-                                    <td style="vertical-align:middle;">
-                                        <button type="submit" style="border:0px;background-color: white;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                                          </svg> {{item.username}}</button>
+                                    <td style="align-self:middle;">
+                                        <button type="submit" style="border:0px;background-color: transparent;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary"> {{item.username}}</button>
                                     </td>
                                 </form>
                             </tr>   
                             {% endfor %}
                         </tbody>
                     </table>
-                    <!-- {% for item in users_in_db %}
-                    <form method="POST">
-                        <div class="mb-3">
-                            <input type="hidden" required name="username" value="{{item.username}}" >
-                        </div>
-                        <button type="submit" style="border:0px;background-color: white;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary">{{item.username}}</button>
-                    </form>
-                    {% endfor %} -->
                     <!-- <a style="border:2px solid black;background-color: white;text-align: center;color: black;font-weight: bold;font-size: medium;"class="btn btn-primary" href="/groupchat">GROUP</a> -->
                 </div>
                 <div class="col-md-6 " >
@@ -131,7 +132,7 @@ textarea.form-control {
                                 <input type="hidden" required name="to" value="{{to}}">
                                 <textarea class="form-control" required name="message" placeholder="Enter the text"></textarea>
                             </div>
-                            <button style="background-color: white;font-weight: bold;color: black;border: 2px solid black;margin-top: -55px;margin-left: 400px;border-radius: 5px;" type="btn btn-primary" class="sbt">Send</button>
+                            <button style="background-color: white;font-weight: bold;color: black;border: 2px solid black;margin-top: -55px;margin-left: 87%;border-radius: 5px;" type="btn btn-primary" class="sbt">Send</button>
                         </form>
                     </main>
                 </div>
