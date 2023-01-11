@@ -5,7 +5,7 @@
 .form textarea {
 	border: 2px solid black;
 	border-radius: 0px;
-	width: 400px;
+	width: 90%;
 	height: 45px;
 }
 .form button {
@@ -13,16 +13,129 @@
 	font-weight: bold;
 	color: black;
 	border: 2px solid black;
-	margin-top: -60px;
-	margin-left: 420px;
+	margin-top: -52px;
+	margin-left: 91%;
+	border-radius: 5px;
 }
+
+*{
+	box-sizing:border-box;
+}
+#container{
+	width:700px;
+	height:518px;
+	background:transparent;
+	margin :0 auto;
+	margin-bottom: 50px;
+	font-size:0;
+	border-radius:10px;
+	overflow:hidden;
+	border:2px solid white;
+	padding-left: 0px;
+}
+
+main{
+	width:700px;
+	height:500px;
+	display:inline-block;
+	font-size:15px;
+	vertical-align:top;
+}
+
+main header{
+	color:white;
+	height:1px;
+	padding:10px 1px 50px 225px;
+}
+main header > *{
+	display:inline-block;
+	vertical-align:top;
+}
+
+#chat{
+	padding-left:0;
+	margin:0;
+	list-style-type:none;
+	overflow-y:scroll;
+	height:410px;
+	border-top:2px solid white;
+	border-bottom:2px solid white;
+}
+#chat li{
+	padding:1px 30px;
+}
+#chat h2{
+	display:inline-block;
+	position: relative;
+	left:10px;
+	font-size:16px;
+	font-weight:bold;
+	color:white;
+}
+#chat h3{
+	display:inline-block;
+	font-size:10px;
+	font-weight:bold;
+}
+#chat h3{
+	color:gray;
+}
+#chat .message{
+	padding:20px;
+	color:#fff;
+	line-height:25px;
+	max-width:90%;
+	display:inline-block;
+	text-align:left;
+}
+#chat .me{
+	text-align:right;
+}
+#chat .you{
+	text-align:left;
+}
+#chat .you .message{
+	font-weight:bold;
+	color:black;
+	background-color:white;
+	border-radius:10px;
+
+}
+#chat .me .message{
+	font-weight:bold;
+	color:black;
+	background-color:white;
+	border-radius:10px;
+}
+@media only screen and (max-width: 390px) {
+    #container {
+        width: 375px;
+		height: 500px;
+		position: relative;
+		left: -5px;
+    }
+	main header{
+		padding:10px 1px 50px 150px;
+	}
+	#chat{
+		height:391px;
+		width: 375px;
+	}
+	.form textarea {
+	width: 45%;
+	}
+	.form button {
+	margin-left: 45%;
+	}
+}
+
 </style>
 
 {% extends "base.html" %}
 
 {% block title %}
 <title>Group Chat</title>
-<link rel="stylesheet" href="/static/chat.css">
+<!-- <link rel="stylesheet" href="/static/chat.css"> -->
 {% endblock %}
 
 {% block contant %}
@@ -69,7 +182,8 @@
 			<div class="mb-3">
 				<textarea class="form-control" required name="message" placeholder="Enter the text"></textarea>
 			</div>
-			<button type="submit" class="btn btn-primary">Send</button>
+			<button type="btn btn-primary" class="sbt">Send</button>
+			<!-- style="background-color: white;font-weight: bold;color: black;border: 2px solid black;margin-top: -52px;margin-left: 90%;border-radius: 5px;"  -->
 		</form>
 	</main>
 </div>

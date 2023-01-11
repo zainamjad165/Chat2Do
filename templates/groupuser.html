@@ -10,22 +10,35 @@
     {% for item in is_of %}
         <h1 style="color:white;">Add User in {{item.member}}</h1>
     {% endfor %}
+    <br>
     {% for error in errors %}
         <div class="alert alert-danger" role="alert">
             {{ error }}
         </div>
     {% endfor %}
-    <form method="POST">
-        <div class="mb-3">
-            {% for item in users_in_db %}
-            <form method="POST">
-                <div class="mb-3">
-                    <input type="hidden" required name="username" value="{{item.username}}" >
-                </div>
-                <button type="submit" style="border:2px solid black;background-color: white;text-align: center;color: black;font-weight: bold;font-size: medium;"class="btn btn-primary">{{item.username}}</button>
-            </form>
-            {% endfor %}
-        </div>
-    </form>
+    <div>
+        <table class="table table-striped">
+            <tbody>
+                {% for item in users_in_db %}
+                <tr>
+                    <form method="POST" class="but">
+                        <div class="mb-3">
+                            <input type="hidden" required name="uzer" value="{{item.username}}" >
+                        </div>
+                        <td style="text-align: center;background-color: white;">
+                            <button type="submit" style="border:0px;background-color: transparent;color: black;font-weight: bolder;font-size: larger;"class="btn btn-primary"> {{item.username}}</button>
+                        </td>
+                    </form>
+                </tr>   
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    
+    <br>
+    <a style="border:2px solid black;background-color: white;margin-bottom: 30px;text-align: center;color: black;font-weight: bold;font-size: medium;"class="btn btn-primary" href="/managegroups"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+      </svg></a>
 </div>
 {% endblock %}
