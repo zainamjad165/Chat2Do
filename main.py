@@ -15,6 +15,11 @@ users = sqlalchemy.Table(
     metadata,
     sqlalchemy.Column("username", sqlalchemy.String)
 )
+groupname = sqlalchemy.Table(
+    "groupname",
+    metadata,
+    sqlalchemy.Column("groupname", sqlalchemy.String) 
+)
 
 reciver = sqlalchemy.Table(
     "reciver",
@@ -41,6 +46,14 @@ groupuser = sqlalchemy.Table(
     sqlalchemy.Column("groupname", sqlalchemy.String),
     sqlalchemy.Column("username", sqlalchemy.String)
 
+)
+group_contant = sqlalchemy.Table(
+    "group_contant",
+    metadata,
+    sqlalchemy.Column("message", sqlalchemy.String),
+    sqlalchemy.Column("by",sqlalchemy.String),
+    sqlalchemy.Column("created_at",sqlalchemy.String),
+    sqlalchemy.Column("date",sqlalchemy.String),
 )
 
 todos = sqlalchemy.Table(

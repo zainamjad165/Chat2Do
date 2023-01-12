@@ -9,11 +9,18 @@
 {% include 'navbar.html' %}
 
 <div class="container text-center">
-    <h1 style="color:white;margin-top: 30px;">My Groups</h1>
+    <!-- <h1 style="color:white;margin-top: 30px;">My Groups</h1>
     <br>
     {% for item in mygroups %}
         <button type="submit" style="border:2px solid black;background-color: white;text-align: center;color: black;font-weight: bold;font-size: medium;"class="btn btn-primary">{{item.groupname}}</button>
     {% endfor %}
+    <br>
+    <br>
+    <h1 style="color:white;margin-top: 30px;">Member of Groups</h1>
+    <br>
+    {% for item in ingroups %}
+        <button type="submit" style="border:2px solid black;background-color: white;text-align: center;color: black;font-weight: bold;font-size: medium;"class="btn btn-primary">{{item.groupname}}</button>
+    {% endfor %} -->
     <br>
     <br>
     <h1 style="color:white;">Creat Group</h1>
@@ -30,7 +37,7 @@
         <br>
         <button type="submit" style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary">Creat</button>
     </form>
-    <br>
-    <a style="border:2px solid black;background-color: white;margin-bottom: 30px;text-align: center;color: black;font-weight: bold;font-size: medium;"class="btn btn-primary" href="/managegroups">MANAGE GROUPS</a>
+    <!-- <br>
+    <a style="border:2px solid black;background-color: white;margin-bottom: 30px;text-align: center;color: black;font-weight: bold;font-size: medium;"class="btn btn-primary" href="/managegroups">MANAGE GROUPS</a> -->
 </div>
 {% endblock %}
