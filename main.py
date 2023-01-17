@@ -15,46 +15,6 @@ users = sqlalchemy.Table(
     metadata,
     sqlalchemy.Column("username", sqlalchemy.String)
 )
-groupname = sqlalchemy.Table(
-    "groupname",
-    metadata,
-    sqlalchemy.Column("groupname", sqlalchemy.String) 
-)
-
-reciver = sqlalchemy.Table(
-    "reciver",
-    metadata,
-    sqlalchemy.Column("reciver", sqlalchemy.String) 
-)
-member = sqlalchemy.Table(
-    "member",
-    metadata,
-    sqlalchemy.Column("member", sqlalchemy.String) 
-)
-
-group = sqlalchemy.Table(
-    "group",
-    metadata,
-    sqlalchemy.Column("groupname", sqlalchemy.String),
-    sqlalchemy.Column("admin", sqlalchemy.String)
-
-)
-
-groupuser = sqlalchemy.Table(
-    "groupuser",
-    metadata,
-    sqlalchemy.Column("groupname", sqlalchemy.String),
-    sqlalchemy.Column("username", sqlalchemy.String)
-
-)
-group_contant = sqlalchemy.Table(
-    "group_contant",
-    metadata,
-    sqlalchemy.Column("message", sqlalchemy.String),
-    sqlalchemy.Column("by",sqlalchemy.String),
-    sqlalchemy.Column("created_at",sqlalchemy.String),
-    sqlalchemy.Column("date",sqlalchemy.String),
-)
 
 todos = sqlalchemy.Table(
     "todos",
@@ -63,6 +23,12 @@ todos = sqlalchemy.Table(
     sqlalchemy.Column("tittle", sqlalchemy.String),
     sqlalchemy.Column("description", sqlalchemy.String),
     sqlalchemy.Column("username",sqlalchemy.String),
+)
+
+reciver = sqlalchemy.Table(
+    "reciver",
+    metadata,
+    sqlalchemy.Column("reciver", sqlalchemy.String) 
 )
 
 texts = sqlalchemy.Table(
@@ -83,6 +49,44 @@ messages = sqlalchemy.Table(
     sqlalchemy.Column("created_at",sqlalchemy.String),
     sqlalchemy.Column("date",sqlalchemy.String),
 )
+
+group = sqlalchemy.Table(
+    "group",
+    metadata,
+    sqlalchemy.Column("groupname", sqlalchemy.String),
+    sqlalchemy.Column("admin", sqlalchemy.String)
+)
+
+groupuser = sqlalchemy.Table(
+    "groupuser",
+    metadata,
+    sqlalchemy.Column("groupname", sqlalchemy.String),
+    sqlalchemy.Column("username", sqlalchemy.String)
+)
+
+member = sqlalchemy.Table(
+    "member",
+    metadata,
+    sqlalchemy.Column("member", sqlalchemy.String) 
+)
+
+groupname = sqlalchemy.Table(
+    "groupname",
+    metadata,
+    sqlalchemy.Column("groupname", sqlalchemy.String) 
+)
+
+group_contant = sqlalchemy.Table(
+    "group_contant",
+    metadata, 
+    sqlalchemy.Column("message", sqlalchemy.String),
+    sqlalchemy.Column("groupname", sqlalchemy.String),
+    sqlalchemy.Column("by",sqlalchemy.String),
+    sqlalchemy.Column("created_at",sqlalchemy.String),
+    sqlalchemy.Column("date",sqlalchemy.String),
+)
+
+
 
 #BINDING DATABASE
 engine = sqlalchemy.create_engine(

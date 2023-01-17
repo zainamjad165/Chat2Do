@@ -1,0 +1,29 @@
+<style>
+    body {
+        background-image: url("/static/chat\ wall.jpg");
+}
+</style>
+{% extends "base.html" %}
+
+{% block contant %}
+{% include 'navbar.html' %}
+
+<div class="container text-center">
+    <br>
+    <br>
+    <h1 style="color:white;">Creat Group</h1>
+    {% for error in errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+    {% endfor %}
+    <br>
+    <form method="POST">
+        <div class="mb-3">
+            <input type="text" required class="form-control" name="groupname" placeholder="Enter Groupname ">
+        </div>
+        <br>
+        <button type="submit" style="border:2px solid black;background-color: white;border-radius: 2px;width: 150px;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary">Creat</button>
+    </form>
+</div>
+{% endblock %}
