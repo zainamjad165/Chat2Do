@@ -69,7 +69,7 @@ textarea.form-control {
     <div class="container text-center">
         <br>
         <div class="icon">
-            <h2 class="ChatRoom">CHAT</h2>
+            <h2 class="ChatRoom">GROUP CHAT</h2>
         </div>
         <br>
         <div class="container-fluid">
@@ -116,6 +116,9 @@ textarea.form-control {
                             {% endif %}
                             {% if item.by != username %}
                                 <li class="you">
+                                    <div class="entete">
+                                        <h2>{{item.by}}</h2>
+                                    </div>
                                     <div class="message">
                                         {{item.message}}
                                     </div>
@@ -129,9 +132,11 @@ textarea.form-control {
                         <form  method="POST" class="textform">
                             <div class="mb-3">
                                 <input type="hidden" required name="to" value="{{to}}">
-                                <textarea class="form-control" required name="message" placeholder="Enter the text"></textarea>
+                                <!-- <textarea class="form-control" required name="message" placeholder="Enter the text"></textarea> -->
+                                <input style="width:88%;height: 9.5%;border-radius: 0px;" type="text" class="form-control" required name="message" placeholder="Enter the text">
                             </div>
-                            <button style="background-color: white;font-weight: bold;color: black;border: 2px solid black;margin-top: -55px;margin-left: 87%;border-radius: 5px;" type="btn btn-primary" class="sbt">Send</button>
+                            <button style="background-color: white;font-weight: bold;color: black;border: 2px solid black;margin-top: -64px;margin-left: 87%;height:9%;width:11%;border-radius: 5px;" type="btn btn-primary" class="sbt">Send</button>
+                            <!-- <button style="background-color: white;font-weight: bold;color: black;border: 2px solid black;margin-top: -55px;margin-left: 87%;border-radius: 5px;" type="btn btn-primary" class="sbt">Send</button> -->
                         </form>
                     </main>
                 </div>

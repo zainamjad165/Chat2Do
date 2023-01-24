@@ -82,38 +82,44 @@
                                       </svg></button>
                                     </form>
                                   </td>
+                                  <td>
+                                    <form  id="list" method="Post">
+                                      <div class="mb-3">
+                                        <input type="hidden" required name="kickuser" value="{{ item.groupname }}" >
+                                      </div>
+                                      <button type="submit" style="border:0px;background-color: white;text-align: center;color: black;font-weight: bold;font-size: small;"class="btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-x-fill" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"/>
+                                      </svg></button>
+                                    </form>
+                                  </td>
                             </tr>   
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-            </div>
-            <div class="container-fluid">
-              <div class="row justify-content-center" id="banner">
+                <div class="col-md-1 "></div>
                 <div class="col-md-5 " id="List">
                   <h3>Member of Groups</h3>
                   <table class="table">
                       <tbody>
-                          {% for item in ingroups %}
+                          {% for item in l3 %}
                           <tr>
-                              <th style="vertical-align:middle;font-size: larger;font-weight: bold;" scope="row">{{ item.groupname }}</th>
+                              <th style="vertical-align:middle;font-size: larger;font-weight: bold;" scope="row">{{ item }}</th>
                               <td>
                                 <form  id="list" method="Post">
                                   <div class="mb-3">
-                                    <input type="hidden" required name="left" value="{{ item.groupname }}" >
+                                    <input type="hidden" required name="left" value="{{ item }}" >
                                   </div>
-                                  <button type="submit" style="border:2px;background-color: red;text-align: center;color: white;font-weight: bold;font-size: small;"class="btn btn-primary">LEFT</button>
+                                  <button type="submit" style="border:1px solid black;background-color: rgb(155, 6, 6);text-align: center;color: black;font-weight: bold;font-size: small;"class="btn btn-primary">EXIT</button>
                                 </form>
                               </td>
                           </tr>   
                           {% endfor %}
                       </tbody>
                   </table>
+                </div>
               </div>
             </div>
         </div>
-        <!-- <a style="border:2px solid black;background-color: white;margin-bottom: 30px;text-align: center;color: black;font-weight: bold;font-size: medium;"class="btn btn-primary" href="/group"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-        </svg></a> -->
     </div>
 {% endblock %}

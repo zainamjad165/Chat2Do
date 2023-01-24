@@ -17,7 +17,12 @@
     padding-left: 0px;
 
 }
-
+#text{
+    width:88%;height: 9.5%;border-radius: 0px;
+}
+#button{
+    background-color: white;font-weight: bold;color: black;border: 2px solid black;margin-top: -64px;margin-left: 87%;height:9%;width:11%;border-radius: 5px;
+}
 textarea.form-control {
     min-height: calc(1.5em + 0.75rem + 2px);
     border-radius: 0px;
@@ -52,6 +57,12 @@ textarea.form-control {
 @media only screen and (max-width: 390px) {
     #Users {
         width: 110px;
+    }
+    #text {
+        width: 45%;
+    }
+    #button {
+        width: 18%;
     }
     
 }
@@ -129,9 +140,9 @@ textarea.form-control {
                         <form  method="POST" class="textform">
                             <div class="mb-3">
                                 <input type="hidden" required name="to" value="{{to}}">
-                                <textarea class="form-control" required name="message" placeholder="Enter the text"></textarea>
+                                <input id= "text" type="text" class="form-control" required name="message" placeholder="Enter the text">
                             </div>
-                            <button style="background-color: white;font-weight: bold;color: black;border: 2px solid black;margin-top: -55px;margin-left: 87%;border-radius: 5px;" type="btn btn-primary" class="sbt">Send</button>
+                            <button id= "button" type="btn btn-primary" class="sbt">Send</button>
                         </form>
                     </main>
                 </div>

@@ -11,7 +11,7 @@
         <div class="row justify-content-center" id="banner">
             <div class="col-md-5 " id="Creat">
                 {% for item in is_of %}
-                    <h1 style="color:white;">Add User in {{item.member}}</h1>
+                    <h1 style="color:white;">kick User from {{item.member}}</h1>
                 {% endfor %}
                 <br>
                 {% for error in errors %}
@@ -22,14 +22,14 @@
                 <div>
                     <table class="table table-striped">
                         <tbody>
-                            {% for item in l3 %}
+                            {% for item in userin %}
                             <tr>
                                 <form method="POST" class="but">
                                     <div class="mb-3">
-                                        <input type="hidden" required name="uzer" value="{{item}}" >
+                                        <input type="hidden" required name="uzer" value="{{item.username}}" >
                                     </div>
                                     <td style="text-align: center;background-color: white;">
-                                        <button type="submit" style="border:0px;background-color: transparent;color: black;font-weight: bolder;font-size: larger;"class="btn btn-primary"> {{item}}</button>
+                                        <button type="submit" style="border:0px;background-color: transparent;color: black;font-weight: bolder;font-size: larger;"class="btn btn-primary"> {{item.username}}</button>
                                     </td>
                                 </form>
                             </tr>   

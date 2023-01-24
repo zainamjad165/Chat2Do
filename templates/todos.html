@@ -49,7 +49,7 @@
                     <table class="table">
                         <thead>
                           <tr>
-                            <th scope="col">ID</th>
+                            <!-- <th scope="col">ID</th> -->
                             <th scope="col">Tittle</th>
                             <th scope="col">Description</th>
                             <th scope="col"></th>
@@ -58,7 +58,7 @@
                         <tbody>
                             {% for item in todos_in_db %}
                             <tr>
-                                <th scope="row" style="vertical-align: middle;">{{ item.id }}</th>
+                                <th scope="row" style="display: none;vertical-align: middle;">{{ item.id }}</th>
                                 <td style="vertical-align:middle;">{{item.tittle}}</td>
                                 <td style="vertical-align:middle;">{{item.description}}</td>
                                 <form  id="list" method="Post">
@@ -76,6 +76,7 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="col-md-1 "></div>
                 <div class="col-md-5 " id="Creat">
                     <h1>Creat Todo </h1>
                     <form  id="creat" method="POST" >
