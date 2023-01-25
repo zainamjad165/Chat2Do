@@ -38,6 +38,8 @@ main header > *{
 	margin:0;
 	list-style-type:none;
 	overflow-y:scroll;
+	display: flex;
+	flex-direction: column-reverse;
 	height:410px;
 	border-top:2px solid white;
 	border-bottom:2px solid white;

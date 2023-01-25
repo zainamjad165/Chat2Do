@@ -157,6 +157,7 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
     all_messages = text_in_private + text_by_in_private
     asd = sorted(all_messages, key=lambda time: time[3])
     zxc= sorted(asd, key=lambda date: date[4])
+    zxc.reverse()
     return templates.TemplateResponse("chat.html",{"request":request,"is_for":is_for,"zxc":zxc,"username":username,"msg":msg,"users_in_db":users_in_db})
 
 
@@ -180,6 +181,7 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
         all_messages = text_in_private + text_by_in_private
         asd = sorted(all_messages, key=lambda time: time[3])
         zxc= sorted(asd, key=lambda date: date[4])
+        zxc.reverse()
     else:
         query = reciver.select()
         is_for = await database.fetch_all(query)
@@ -195,6 +197,7 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
         all_messages = text_in_private + text_by_in_private
         asd = sorted(all_messages, key=lambda time: time[3])
         zxc= sorted(asd, key=lambda date: date[4])
+        zxc.reverse()
     query = users.select().where(users.c.username != username)
     users_in_db=await database.fetch_all(query)
     return templates.TemplateResponse("chat.html",{"request":request,"is_for":is_for,"zxc":zxc,"username":username,"msg":msg,"users_in_db":users_in_db})
@@ -211,7 +214,7 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
     form = await request.form()
     groupname = form.get("groupname")
     errors = []
-    query = group.select().where(group.c.admin == username)
+    query = groupuser.select().where(groupuser.c.groupname == groupname)
     mygroups = await database.fetch_all(query)
     taken = [tup[0] for tup in mygroups]
     if groupname in taken:
@@ -307,7 +310,6 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
     users_in_db=await database.fetch_all(query)
     users_in= [tup[-1] for tup in users_in_db] 
     l3 = [x for x in users_in if x not in userisin]
-    print (l3)
     return templates.TemplateResponse("adduser.html",{"request":request,"username":username,"users_in_db":users_in_db,"is_of":is_of,"l3":l3})
 
 @app.post("/adduser", include_in_schema=False)
@@ -336,6 +338,7 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
     all_messages = await database.fetch_all(query)
     asd = sorted(all_messages, key=lambda time: time[3])
     zxc= sorted(asd, key=lambda date: date[4])
+    zxc.reverse()
     return templates.TemplateResponse("groupchat.html",{"request":request,"is_for":is_for,"zxc":zxc,"msg":msg,"username":username,"ingroups":ingroups})
 
 
@@ -356,6 +359,7 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
         all_messages = await database.fetch_all(query)
         asd = sorted(all_messages, key=lambda time: time[3])
         zxc= sorted(asd, key=lambda date: date[4])
+        zxc.reverse()
     else:
         query = groupname.select()
         is_for = await database.fetch_all(query)
@@ -368,6 +372,7 @@ async def create_text(request: Request,user: User = Depends(current_active_user)
         all_messages = await database.fetch_all(query)
         asd = sorted(all_messages, key=lambda time: time[3])
         zxc= sorted(asd, key=lambda date: date[4])
+        zxc.reverse()
     query = groupuser.select().where(groupuser.c.username == username)
     ingroups=await database.fetch_all(query)
     return templates.TemplateResponse("groupchat.html",{"request":request,"zxc":zxc,"is_for":is_for,"username":username,"ingroups":ingroups})
