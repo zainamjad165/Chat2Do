@@ -90,6 +90,41 @@ main header > *{
 	background-color:white;
 	border-radius:10px;
 }
+
+@media only screen and (max-width: 1440px) {
+    #container {
+        width: 600px;
+		height: 520px;
+		position: relative;
+		left: 50px;
+    }
+	main {
+		width: 600;
+	}
+	#chat{
+		height:406px;
+		width: 600px;
+	}
+}
+
+@media only screen and (max-width: 425px) {
+    #container {
+        width: 321px;
+		height: 500px;
+		position: relative;
+		left: 50px;
+    }
+	main header{
+		padding:10px 205px 50px 150px;
+	}
+	#chat{
+		height:391px;
+		width: 321px;
+	}
+	#chat .message{
+		line-height:0px;
+	}
+}
 @media only screen and (max-width: 390px) {
     #container {
         width: 273px;
