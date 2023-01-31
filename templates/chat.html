@@ -32,7 +32,7 @@ textarea.form-control {
 	width: 440px;
 	height: 46px;
 }
-@media only screen and (max-width: 1440px) {
+@media only screen and (min-width: 1440px) {
     #Users {
         position: absolute;
         left: 16%;
@@ -113,14 +113,14 @@ textarea.form-control {
                 <div class="col-md-2 " id="Users">
                     <table class="table table-striped">
                         <tbody>
-                            {% for item in users_in_db %}
+                            {% for item in a %}
                             <tr>
                                 <form method="POST" class="but">
                                     <div class="mb-3">
-                                        <input type="hidden" required name="username" value="{{item.username}}" >
+                                        <input type="hidden" required name="username" value="{{item}}" >
                                     </div>
                                     <td style="align-self:middle;">
-                                        <button type="submit" style="border:0px;background-color: transparent;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary"> {{item.username}}</button>
+                                        <button type="submit" style="border:0px;background-color: transparent;text-align: center;color: black;font-weight: bold;font-size: large;"class="btn btn-primary"> {{item}}</button>
                                     </td>
                                 </form>
                             </tr>   

@@ -146,19 +146,61 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
     username=user.email.split('@')[0]
     query = users.select().where(users.c.username != username)
     users_in_db=await database.fetch_all(query)
+    a = [tup[0] for tup in users_in_db]
+    b = a[0]
+    query = texts.select()
+    c = await database.fetch_all(query)
+    d = c[-1]
+    e = d[1]
+    if e in a :
+        a.remove(e)
+        a.insert(0,e)
+        f = c[-2]
+        g = f[1]
+        if g in a :
+            a.remove(g)
+            a.insert(1,g)
+        else:
+            g = f[2]
+            a.remove(g)
+            a.insert(1,g)
+    else:
+        e = d[2]
+        a.remove(e)
+        a.insert(0,e)
+        f = c[-2]
+        g = f[1]
+        a.remove(g)
+        a.insert(1,g)
     query = reciver.select()
     is_for = await database.fetch_all(query)
     for item in is_for:
         to=item.reciver
-    query = texts.select().where(texts.c.to == username, texts.c.by == to )
-    text_in_private=await database.fetch_all(query)
-    query = texts.select().where(texts.c.to == to, texts.c.by == username )
-    text_by_in_private=await database.fetch_all(query)
-    all_messages = text_in_private + text_by_in_private
-    asd = sorted(all_messages, key=lambda time: time[3])
-    zxc= sorted(asd, key=lambda date: date[4])
-    zxc.reverse()
-    return templates.TemplateResponse("chat.html",{"request":request,"is_for":is_for,"zxc":zxc,"username":username,"msg":msg,"users_in_db":users_in_db})
+    if to == username:
+        query = reciver.update().values(reciver = b)
+        await database.execute(query)
+        query = reciver.select()
+        is_for = await database.fetch_all(query)
+        for item in is_for:
+            to=item.reciver
+        query = texts.select().where(texts.c.to == username, texts.c.by == to )
+        text_in_private=await database.fetch_all(query)
+        query = texts.select().where(texts.c.to == to, texts.c.by == username )
+        text_by_in_private=await database.fetch_all(query)
+        all_messages = text_in_private + text_by_in_private
+        asd = sorted(all_messages, key=lambda time: time[3])
+        zxc= sorted(asd, key=lambda date: date[4])
+        zxc.reverse()
+    else:
+        query = texts.select().where(texts.c.to == username, texts.c.by == to )
+        text_in_private=await database.fetch_all(query)
+        query = texts.select().where(texts.c.to == to, texts.c.by == username )
+        text_by_in_private=await database.fetch_all(query)
+        all_messages = text_in_private + text_by_in_private
+        asd = sorted(all_messages, key=lambda time: time[3])
+        zxc= sorted(asd, key=lambda date: date[4])
+        zxc.reverse()
+    return templates.TemplateResponse("chat.html",{"request":request,"is_for":is_for,"zxc":zxc,"username":username,"msg":msg,"a":a,"users_in_db":users_in_db})
 
 
 @app.post("/chat", include_in_schema=False)
@@ -200,7 +242,33 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
         zxc.reverse()
     query = users.select().where(users.c.username != username)
     users_in_db=await database.fetch_all(query)
-    return templates.TemplateResponse("chat.html",{"request":request,"is_for":is_for,"zxc":zxc,"username":username,"msg":msg,"users_in_db":users_in_db})
+    a = [tup[0] for tup in users_in_db]
+    b = a[0]
+    query = texts.select()
+    c = await database.fetch_all(query)
+    d = c[-1]
+    e = d[1]
+    if e in a :
+        a.remove(e)
+        a.insert(0,e)
+        f = c[-2]
+        g = f[1]
+        if g in a :
+            a.remove(g)
+            a.insert(1,g)
+        else:
+            g = f[2]
+            a.remove(g)
+            a.insert(1,g)
+    else:
+        e = d[2]
+        a.remove(e)
+        a.insert(0,e)
+        f = c[-2]
+        g = f[1]
+        a.remove(g)
+        a.insert(1,g)
+    return templates.TemplateResponse("chat.html",{"request":request,"is_for":is_for,"zxc":zxc,"username":username,"msg":msg,"a":a,"users_in_db":users_in_db})
 
 
 @app.get("/creatgroup", include_in_schema=False)
@@ -330,15 +398,30 @@ async def get(request:Request,msg: str = None,user: User = Depends(current_activ
     username=user.email.split('@')[0]
     query = groupuser.select().where(groupuser.c.username == username)
     ingroups=await database.fetch_all(query)
+    a = [tup[0] for tup in ingroups]
+    b = a[0]
     query = groupname.select()
     is_for = await database.fetch_all(query)
     for item in is_for:
         to=item.groupname
-    query = group_contant.select().where(group_contant.c.groupname == to)
-    all_messages = await database.fetch_all(query)
-    asd = sorted(all_messages, key=lambda time: time[3])
-    zxc= sorted(asd, key=lambda date: date[4])
-    zxc.reverse()
+    if to in a:
+        query = group_contant.select().where(group_contant.c.groupname == to)
+        all_messages = await database.fetch_all(query)
+        asd = sorted(all_messages, key=lambda time: time[3])
+        zxc= sorted(asd, key=lambda date: date[4])
+        zxc.reverse()
+    else:
+        query = groupname.update().values(groupname = b)
+        await database.execute(query)
+        query = groupname.select()
+        is_for = await database.fetch_all(query)
+        for item in is_for:
+            to=item.groupname
+        query = group_contant.select().where(group_contant.c.groupname == to)
+        all_messages = await database.fetch_all(query)
+        asd = sorted(all_messages, key=lambda time: time[3])
+        zxc= sorted(asd, key=lambda date: date[4])
+        zxc.reverse()
     return templates.TemplateResponse("groupchat.html",{"request":request,"is_for":is_for,"zxc":zxc,"msg":msg,"username":username,"ingroups":ingroups})
 
 
